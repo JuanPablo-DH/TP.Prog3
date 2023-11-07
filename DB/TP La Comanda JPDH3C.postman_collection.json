@@ -1,0 +1,1771 @@
+{
+	"info": {
+		"_postman_id": "5e4497e4-8742-48ec-9761-d3b4c9721ebf",
+		"name": "TP La Comanda JPDH3C",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30236864"
+	},
+	"item": [
+		{
+			"name": "Alta L",
+			"item": [
+				{
+					"name": "Estructura Restaurante",
+					"item": [
+						{
+							"name": "Mesa Alta L",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "tipo",
+											"value": "grande",
+											"type": "text"
+										},
+										{
+											"key": "cantidad_clientes_maxima",
+											"value": "4",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/mesa/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"mesa",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Producto Alta L",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "tipo",
+											"value": "comida",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "milanesa",
+											"type": "text"
+										},
+										{
+											"key": "stock",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "precio_unidades",
+											"value": "26",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/producto",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"producto"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Integrantes Restaurante",
+					"item": [
+						{
+							"name": "Bartender Alta L",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nombre",
+											"value": "Juan Pablo",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "Dongo Huaman",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "43445875",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "bartender",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cervezero Alta L",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nombre",
+											"value": "Kevin",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "Robles",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "43445874",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "cervezero",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cocinero Alta L",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nombre",
+											"value": "Santiago",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "Robles",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "43445876",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "cocinero",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mozo Alta L",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nombre",
+											"value": "Alan",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "Ornat",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "43445877",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "mozo",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Socio Alta L",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nombre",
+											"value": "Adrian",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "Barrientos",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "43445878",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "socio",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cliente Alta L",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nombre",
+											"value": "Santiago",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/cliente",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"cliente"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Baja L",
+			"item": [
+				{
+					"name": "Estructura Restaurante",
+					"item": [
+						{
+							"name": "Mesa Baja L",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_mesa",
+											"value": "10001",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/mesa",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"mesa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Producto Baja L",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_producto",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/producto",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"producto"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Integrantes Restaurante",
+					"item": [
+						{
+							"name": "Bartender Baja L",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cervezero Baja L",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cocinero Baja L",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mozo Baja L",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Socio Baja L",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cliente Baja L",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_cliente",
+											"value": "pTMm0c",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/cliente",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"cliente"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Modificar L",
+			"item": [
+				{
+					"name": "Estructura Restaurante",
+					"item": [
+						{
+							"name": "Mesa Modificar L",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_mesa",
+											"value": "10002",
+											"type": "text"
+										},
+										{
+											"key": "tipo",
+											"value": "chica",
+											"type": "text"
+										},
+										{
+											"key": "cantidad_clientes_maxima",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "baja",
+											"value": "false",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/mesa",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"mesa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Producto Modificar L",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_producto",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "tipo",
+											"value": "bebida",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "coca-cola",
+											"type": "text"
+										},
+										{
+											"key": "stock",
+											"value": "26",
+											"type": "text"
+										},
+										{
+											"key": "precio_unidades",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "baja",
+											"value": "true",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/producto",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"producto"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Integrantes Restaurante",
+					"item": [
+						{
+							"name": "Bartender Modificar L",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "juan pablo",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "dongo huaman",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "43445875",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "bartender",
+											"type": "text"
+										},
+										{
+											"key": "baja",
+											"value": "false",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cervezero Modificar L",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "kevin",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "robles",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "43445874",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "cervezero",
+											"type": "text"
+										},
+										{
+											"key": "baja",
+											"value": "false",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cocinero Modificar L",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "baja",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mozo Modificar L",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "baja",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Socio Modificar L",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_empleado",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "apellido",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "dni",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "rol",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "baja",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/empleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"empleado"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cliente Modificar L",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "numero_cliente",
+											"value": "pTMm0c",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "santiago",
+											"type": "text"
+										},
+										{
+											"key": "baja",
+											"value": "false",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/cliente",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"cliente"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Listar",
+			"item": [
+				{
+					"name": "Estructura Restaurante",
+					"item": [
+						{
+							"name": "Mesa L",
+							"item": [
+								{
+									"name": "Mesa Traer Todas L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/mesa/todas",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"mesa",
+												"todas"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Mesa Traer Una L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/mesa/10002",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"mesa",
+												"10002"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Producto L",
+							"item": [
+								{
+									"name": "Producto Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/producto/todos",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"producto",
+												"todos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Producto Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/producto/100",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"producto",
+												"100"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Pedido L",
+							"item": [
+								{
+									"name": "Pedido Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/pedido/todos",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"pedido",
+												"todos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Pedido Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/pedido/1001",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"pedido",
+												"1001"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Comanda L",
+							"item": [
+								{
+									"name": "Comanda Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/comanda/todos",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"comanda",
+												"todos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Comanda Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/comanda/2",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"comanda",
+												"2"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Movimiento",
+							"item": []
+						}
+					]
+				},
+				{
+					"name": "Integrantes Restaurante L",
+					"item": [
+						{
+							"name": "Bartender L",
+							"item": [
+								{
+									"name": "Bartender Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/todos/bartender",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"todos",
+												"bartender"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Bartender Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/1/bartender",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"1",
+												"bartender"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Cervezero L",
+							"item": [
+								{
+									"name": "Cervezero Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/todos/cervezero",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"todos",
+												"cervezero"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cervezero Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/10003/cervezero",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"10003",
+												"cervezero"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Cocinero L",
+							"item": [
+								{
+									"name": "Cocinero Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/todos/cocinero",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"todos",
+												"cocinero"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cocinero Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/10003/cocinero",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"10003",
+												"cocinero"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Mozo L",
+							"item": [
+								{
+									"name": "Mozo Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/todos/mozo",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"todos",
+												"mozo"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Mozo Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/10003/mozo",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"10003",
+												"mozo"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Socio L",
+							"item": [
+								{
+									"name": "Socio Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/todos/socio",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"todos",
+												"socio"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Socio Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/10003/socio",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"10003",
+												"socio"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Empleado L",
+							"item": [
+								{
+									"name": "Empleado Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/todos",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"todos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Empleado Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/empleado/10003",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"empleado",
+												"10003"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Cliente L",
+							"item": [
+								{
+									"name": "Cliente Traer Todos L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/cliente/todos",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"cliente",
+												"todos"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cliente Traer Uno L",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost/P3/TP/App/cliente/pTMm0c",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"App",
+												"cliente",
+												"pTMm0c"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Funcionalidades",
+			"item": [
+				{
+					"name": "Bartender",
+					"item": []
+				},
+				{
+					"name": "Cervezero",
+					"item": []
+				},
+				{
+					"name": "Cocinero",
+					"item": []
+				},
+				{
+					"name": "Mozo",
+					"item": [
+						{
+							"name": "Mozo Comanda",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nombre_cliente",
+											"value": "Adrian",
+											"type": "text"
+										},
+										{
+											"key": "cantidad_clientes",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "tipo1",
+											"value": "bebida",
+											"description": "pedido 1",
+											"type": "text"
+										},
+										{
+											"key": "nombre1",
+											"value": "coca-cola",
+											"description": "pedido 1",
+											"type": "text"
+										},
+										{
+											"key": "cantidad_unidades1",
+											"value": "5",
+											"description": "pedido 1",
+											"type": "text"
+										},
+										{
+											"key": "precio_unidades1",
+											"value": "10",
+											"description": "pedido 1",
+											"type": "text"
+										},
+										{
+											"key": "tipo2",
+											"value": "comida",
+											"description": "pedido 2",
+											"type": "text"
+										},
+										{
+											"key": "nombre2",
+											"value": "pizza",
+											"description": "pedido 2",
+											"type": "text"
+										},
+										{
+											"key": "cantidad_unidades2",
+											"value": "5",
+											"description": "pedido 2",
+											"type": "text"
+										},
+										{
+											"key": "precio_unidades2",
+											"value": "15",
+											"description": "pedido 2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/App/funcionalidad-mozo/comanda",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"App",
+										"funcionalidad-mozo",
+										"comanda"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Socio",
+					"item": []
+				}
+			]
+		},
+		{
+			"name": "Test L",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/P3/TP/App/test/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"P3",
+						"TP",
+						"App",
+						"test",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
