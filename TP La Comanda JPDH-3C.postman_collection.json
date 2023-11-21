@@ -1,0 +1,3826 @@
+{
+	"info": {
+		"_postman_id": "5e4497e4-8742-48ec-9761-d3b4c9721ebf",
+		"name": "TP La Comanda JPDH-3C",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30236864"
+	},
+	"item": [
+		{
+			"name": "Prueba",
+			"item": [
+				{
+					"name": "Alta L",
+					"item": [
+						{
+							"name": "Estructura Restaurante",
+							"item": [
+								{
+									"name": "Mesa Alta L",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "tipo",
+													"value": "chica",
+													"description": "Mesa",
+													"type": "text"
+												},
+												{
+													"key": "cantidad_clientes_maxima",
+													"value": "2",
+													"description": "Mesa",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/mesa/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"mesa",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Producto Alta L",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "tipo",
+													"value": "comida",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "jugo-naranja",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "stock",
+													"value": "20",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "precio_unidades",
+													"value": "15",
+													"description": "Producto",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/producto",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"producto"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Integrantes Restaurante",
+							"item": [
+								{
+									"name": "Bartender Alta L",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "Juan Pablo",
+													"description": "Bartender",
+													"type": "text"
+												},
+												{
+													"key": "apellido",
+													"value": "Dongo Huaman",
+													"description": "Bartender",
+													"type": "text"
+												},
+												{
+													"key": "dni",
+													"value": "43445875",
+													"description": "Bartender",
+													"type": "text"
+												},
+												{
+													"key": "rol",
+													"value": "bartender",
+													"description": "Bartender",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/empleado",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"empleado"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cervezero Alta L",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "Kevin",
+													"description": "Cervezero",
+													"type": "text"
+												},
+												{
+													"key": "apellido",
+													"value": "Robles",
+													"description": "Cervezero",
+													"type": "text"
+												},
+												{
+													"key": "dni",
+													"value": "43445874",
+													"description": "Cervezero",
+													"type": "text"
+												},
+												{
+													"key": "rol",
+													"value": "cervezero",
+													"description": "Cervezero",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/empleado",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"empleado"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cocinero Alta L",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "Santiago",
+													"description": "Cocinero",
+													"type": "text"
+												},
+												{
+													"key": "apellido",
+													"value": "Robles",
+													"description": "Cocinero",
+													"type": "text"
+												},
+												{
+													"key": "dni",
+													"value": "43445876",
+													"description": "Cocinero",
+													"type": "text"
+												},
+												{
+													"key": "rol",
+													"value": "cocinero",
+													"description": "Cocinero",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/empleado",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"empleado"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Mozo Alta L",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "Alan",
+													"description": "Mozo",
+													"type": "text"
+												},
+												{
+													"key": "apellido",
+													"value": "Ornat",
+													"description": "Mozo",
+													"type": "text"
+												},
+												{
+													"key": "dni",
+													"value": "43445877",
+													"description": "Mozo",
+													"type": "text"
+												},
+												{
+													"key": "rol",
+													"value": "mozo",
+													"description": "Mozo",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/empleado",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"empleado"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Socio Alta L",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "Adrian",
+													"description": "Socio",
+													"type": "text"
+												},
+												{
+													"key": "apellido",
+													"value": "Barrientos",
+													"description": "Socio",
+													"type": "text"
+												},
+												{
+													"key": "dni",
+													"value": "43445878",
+													"description": "Socio",
+													"type": "text"
+												},
+												{
+													"key": "rol",
+													"value": "socio",
+													"description": "Socio",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/empleado",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"empleado"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cliente Alta L",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "cespedes",
+													"description": "Cliente",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/cliente",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"cliente"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Baja L",
+					"item": [
+						{
+							"name": "Estructura Restaurante",
+							"item": [
+								{
+									"name": "Mesa Baja L",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_mesa",
+													"value": "10001",
+													"description": "Mesa",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/mesa",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"mesa"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Producto Baja L",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_producto",
+													"value": "",
+													"description": "Producto",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/producto",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"producto"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Integrantes Restaurante",
+							"item": [
+								{
+									"name": "Empleado Baja L",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_empleado",
+													"value": "1",
+													"description": "Empleado",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/empleado",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"empleado"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cliente Baja L",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_cliente",
+													"value": "gC5jpS",
+													"description": "Cliente",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/cliente",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"cliente"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Modificar L",
+					"item": [
+						{
+							"name": "Estructura Restaurante",
+							"item": [
+								{
+									"name": "Mesa Modificar L",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "adRIan",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_mesa",
+													"value": "10001",
+													"description": "Mesa",
+													"type": "text"
+												},
+												{
+													"key": "tipo",
+													"value": "chica",
+													"description": "Mesa",
+													"type": "text"
+												},
+												{
+													"key": "cantidad_clientes_maxima",
+													"value": "2",
+													"description": "Mesa",
+													"type": "text"
+												},
+												{
+													"key": "baja",
+													"value": "0",
+													"description": "Mesa",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/mesa",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"mesa"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Producto Modificar L",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_producto",
+													"value": "100",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "tipo",
+													"value": "bebida",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "milanesa-caballo",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "stock",
+													"value": "20",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "precio_unidades",
+													"value": "15",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "baja",
+													"value": "0",
+													"description": "Producto",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/producto",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"producto"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Integrantes Restaurante",
+							"item": [
+								{
+									"name": "Empleado Modificar L",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_empleado",
+													"value": "1",
+													"description": "Empleado",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "juan pablo",
+													"description": "Empleado",
+													"type": "text"
+												},
+												{
+													"key": "apellido",
+													"value": "dongo huaman",
+													"description": "Empleado",
+													"type": "text"
+												},
+												{
+													"key": "dni",
+													"value": "43445875",
+													"description": "Empleado",
+													"type": "text"
+												},
+												{
+													"key": "rol",
+													"value": "bartender",
+													"description": "Empleado",
+													"type": "text"
+												},
+												{
+													"key": "baja",
+													"value": "0",
+													"description": "Empleado",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/empleado",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"empleado"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cliente Modificar L",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_cliente",
+													"value": "pTMm0c",
+													"description": "Cliente",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "santiago",
+													"description": "Cliente",
+													"type": "text"
+												},
+												{
+													"key": "baja",
+													"value": "false",
+													"description": "Cliente",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/cliente",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"cliente"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Listar",
+					"item": [
+						{
+							"name": "Estructura Restaurante",
+							"item": [
+								{
+									"name": "Mesa L",
+									"item": [
+										{
+											"name": "Mesa Traer Todas L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/mesa/todas/",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"mesa",
+														"todas",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Mesa Traer Una L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "sdfsdfsdf",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "43445873",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/mesa/una/?numero_mesa=15",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"mesa",
+														"una",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_mesa",
+															"value": "15",
+															"description": "Mesa"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Producto L",
+									"item": [
+										{
+											"name": "Producto Traer Todos L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/producto/todos/",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"producto",
+														"todos",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Producto Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/producto/uno/?numero_producto",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"producto",
+														"uno",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_producto",
+															"value": null,
+															"description": "Producto"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Pedido L",
+									"item": [
+										{
+											"name": "Pedido Traer Todos L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/pedido/todos/",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"pedido",
+														"todos",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Pedido Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/pedido/uno/?numero_pedido",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"pedido",
+														"uno",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_pedido",
+															"value": null,
+															"description": "Pedido"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Comanda L",
+									"item": [
+										{
+											"name": "Comanda Traer Todos L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/comanda/todas/",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"comanda",
+														"todas",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Comanda Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/comanda/una/?numero_comanda",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"comanda",
+														"una",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_comanda",
+															"value": null,
+															"description": "Comanda"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Movimiento",
+									"item": []
+								}
+							]
+						},
+						{
+							"name": "Integrantes Restaurante L",
+							"item": [
+								{
+									"name": "Bartender L",
+									"item": [
+										{
+											"name": "Bartender Traer Todos L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/todos-por-rol/?rol=bartender",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"todos-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "rol",
+															"value": "bartender",
+															"description": "Bartender"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Bartender Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/uno-por-rol/?numero_empleado=&rol=bartender",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"uno-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_empleado",
+															"value": "",
+															"description": "Bartender"
+														},
+														{
+															"key": "rol",
+															"value": "bartender",
+															"description": "Bartender"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Cervezero L",
+									"item": [
+										{
+											"name": "Cervezero Traer Todos L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/todos-por-rol/?rol=cervezero",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"todos-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "rol",
+															"value": "cervezero",
+															"description": "Cervezero"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Cervezero Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/uno-por-rol/?numero_empleado=&rol=cervezero",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"uno-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_empleado",
+															"value": "",
+															"description": "Cervezero"
+														},
+														{
+															"key": "rol",
+															"value": "cervezero",
+															"description": "Cervezero"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Cocinero L",
+									"item": [
+										{
+											"name": "Cocinero Traer Todos L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/todos-por-rol/?rol=cocinero",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"todos-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "rol",
+															"value": "cocinero",
+															"description": "Cocinero"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Cocinero Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/uno-por-rol/?numero_empleado=&rol=cocinero",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"uno-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_empleado",
+															"value": "",
+															"description": "Cocinero"
+														},
+														{
+															"key": "rol",
+															"value": "cocinero",
+															"description": "Cocinero"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Mozo L",
+									"item": [
+										{
+											"name": "Mozo Traer Todos L",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/todos-por-rol/?rol=mozo",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"todos-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "rol",
+															"value": "mozo",
+															"description": "Mozo"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Mozo Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/uno-por-rol/?numero_empleado=&rol=mozo",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"uno-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_empleado",
+															"value": "",
+															"description": "Mozo"
+														},
+														{
+															"key": "rol",
+															"value": "mozo",
+															"description": "Mozo"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Socio L",
+									"item": [
+										{
+											"name": "Socio Traer Todos L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/todos-por-rol/?rol=socio",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"todos-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "rol",
+															"value": "socio",
+															"description": "Socio"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Socio Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/uno-por-rol/?numero_empleado=&rol=socio",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"uno-por-rol",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_empleado",
+															"value": "",
+															"description": "Socio"
+														},
+														{
+															"key": "rol",
+															"value": "socio",
+															"description": "Socio"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Empleado L",
+									"item": [
+										{
+											"name": "Empleado Traer Todos L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "adrian",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "43445878",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/todos/",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"todos",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Empleado Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "adrian",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "43445878",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/empleado/uno/?numero_empleado=1",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"empleado",
+														"uno",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_empleado",
+															"value": "1",
+															"description": "Empleado"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Cliente L",
+									"item": [
+										{
+											"name": "Cliente Traer Todos L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "1",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "2",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/cliente/todos/",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"cliente",
+														"todos",
+														""
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Cliente Traer Uno L",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "nombre_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														},
+														{
+															"key": "dni_empleado",
+															"value": "",
+															"description": "Login",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost/P3/TP/app/cliente/uno/?numero_cliente",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"path": [
+														"P3",
+														"TP",
+														"app",
+														"cliente",
+														"uno",
+														""
+													],
+													"query": [
+														{
+															"key": "numero_cliente",
+															"value": null,
+															"description": "Cliente"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Funcionalidades",
+					"item": [
+						{
+							"name": "Bartender",
+							"item": []
+						},
+						{
+							"name": "Cervezero",
+							"item": []
+						},
+						{
+							"name": "Cocinero",
+							"item": []
+						},
+						{
+							"name": "Mozo",
+							"item": [
+								{
+									"name": "Mozo Comanda",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "alan",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445877",
+													"type": "text"
+												},
+												{
+													"key": "lista_pedidos",
+													"value": "[\n {\n  \"nombre\": \"milanesa-caballo\",\n  \"cantidad_unidades\": 1\n },\n {\n  \"nombre\": \"hamburguesa-garbanzo\",\n  \"cantidad_unidades\": 2\n },\n {\n  \"nombre\": \"corona\",\n  \"cantidad_unidades\": 1\n },\n {\n  \"nombre\": \"daikiri\",\n  \"cantidad_unidades\": 1\n }\n]",
+													"type": "text"
+												},
+												{
+													"key": "nombre_cliente",
+													"value": "pedro",
+													"type": "text"
+												},
+												{
+													"key": "cantidad_clientes",
+													"value": "3",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/comanda",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"comanda"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Socio",
+							"item": []
+						}
+					]
+				},
+				{
+					"name": "Test L",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/P3/TP/App/test/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"P3",
+								"TP",
+								"App",
+								"test",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test JWT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "usuario",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "perfil",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "alias",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/P3/TP/app/jwt/crearToken",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"P3",
+								"TP",
+								"app",
+								"jwt",
+								"crearToken"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Circuito Correccion",
+			"item": [
+				{
+					"name": "JWT Token L",
+					"item": [
+						{
+							"name": "Crear Token Bartender",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "dni",
+											"value": "43445875",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "juan pablo",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/app/jwt/crear-token",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"jwt",
+										"crear-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Crear Token Cevezero",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "dni",
+											"value": "43445874",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "kevin",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/app/jwt/crear-token",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"jwt",
+										"crear-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Crear Token Cocinero",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "dni",
+											"value": "43445876",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "santiago",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/app/jwt/crear-token",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"jwt",
+										"crear-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Crear Token Mozo",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "dni",
+											"value": "43445877",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "alan",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/app/jwt/crear-token",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"jwt",
+										"crear-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Crear Token Socio",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "dni",
+											"value": "43445878",
+											"type": "text"
+										},
+										{
+											"key": "nombre",
+											"value": "adrian",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/app/jwt/crear-token",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"jwt",
+										"crear-token"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Punto 0 L",
+					"item": [
+						{
+							"name": "Alta Mesa L",
+							"item": [
+								{
+									"name": "Mesa Chica",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTE1OTgsImV4cCI6MTcwMDY1MTU5OCwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoianVhbiBwYWJsbyIsImRuaSI6NDM0NDU4NzUsInJvbCI6ImJhcnRlbmRlciJ9LCJhcHAiOiJUUCBMYSBDb21hbmRhIn0.XyZ8W9j59XCjTmkYbKjvS5A39X4LkPjaB_eX4mtlVzw",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "santiago",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445876",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "tipo",
+													"value": "chica",
+													"description": "Mesa",
+													"type": "text"
+												},
+												{
+													"key": "cantidad_clientes_maxima",
+													"value": "2",
+													"description": "Mesa",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/mesa/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"mesa",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Mesa Grande",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "tipo",
+													"value": "grande",
+													"description": "Mesa",
+													"type": "text"
+												},
+												{
+													"key": "cantidad_clientes_maxima",
+													"value": "4",
+													"description": "Mesa",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/mesa/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"mesa",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Alta Producto L",
+							"item": [
+								{
+									"name": "Milanesa Caballo",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyODYsImV4cCI6MTcwMDY1NDI4NiwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoiYWRyaWFuIiwiZG5pIjo0MzQ0NTg3OCwicm9sIjoic29jaW8ifSwiYXBwIjoiVFAgTGEgQ29tYW5kYSJ9.b9c6nmoFPcD3qS9JVLGz-niKh0A8SVLVH-lml6ywkto",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "tipo",
+													"value": "comida",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "milanesa-caballo",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "stock",
+													"value": "5",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "precio_unidades",
+													"value": "25",
+													"description": "Producto",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/producto",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"producto"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Hamburguesa Garbanzo",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "tipo",
+													"value": "comida",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "hamburguesa-garbanzo",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "stock",
+													"value": "7",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "precio_unidades",
+													"value": "30",
+													"description": "Producto",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/producto",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"producto"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Corona",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyODYsImV4cCI6MTcwMDY1NDI4NiwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoiYWRyaWFuIiwiZG5pIjo0MzQ0NTg3OCwicm9sIjoic29jaW8ifSwiYXBwIjoiVFAgTGEgQ29tYW5kYSJ9.b9c6nmoFPcD3qS9JVLGz-niKh0A8SVLVH-lml6ywkto",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "tipo",
+													"value": "bebida-alcohol",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "corona",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "stock",
+													"value": "33",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "precio_unidades",
+													"value": "45",
+													"description": "Producto",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/producto",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"producto"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Daikiri",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "adrian",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445878",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "tipo",
+													"value": "bebida",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "nombre",
+													"value": "daikiri",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "stock",
+													"value": "8",
+													"description": "Producto",
+													"type": "text"
+												},
+												{
+													"key": "precio_unidades",
+													"value": "50",
+													"description": "Producto",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/producto",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"producto"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Punto 1-2 L",
+					"item": [
+						{
+							"name": "Alta Comanda L",
+							"item": [
+								{
+									"name": "Mozo Comanda",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "nombre_empleado",
+													"value": "alan",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445877",
+													"type": "text"
+												},
+												{
+													"key": "lista_pedidos",
+													"value": "[\n {\n  \"nombre\": \"milanesa-caballo\",\n  \"cantidad_unidades\": 1\n },\n {\n  \"nombre\": \"hamburguesa-garbanzo\",\n  \"cantidad_unidades\": 2\n },\n {\n  \"nombre\": \"corona\",\n  \"cantidad_unidades\": 1\n },\n {\n  \"nombre\": \"daikiri\",\n  \"cantidad_unidades\": 1\n }\n]",
+													"type": "text"
+												},
+												{
+													"key": "nombre_cliente",
+													"value": "pedro",
+													"type": "text"
+												},
+												{
+													"key": "cantidad_clientes",
+													"value": "2",
+													"type": "text"
+												},
+												{
+													"key": "imagen",
+													"type": "file",
+													"src": "/C:/Users/Juan Pablo/Desktop/Prog3/Imagen Comanda/imagen.png"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/comanda",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"comanda"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Punto 3 L",
+					"item": [
+						{
+							"name": "Listar L",
+							"item": [
+								{
+									"name": "Listar Pedidos Cervezero",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyNjUsImV4cCI6MTcwMDY1NDI2NSwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoia2V2aW4iLCJkbmkiOjQzNDQ1ODc0LCJyb2wiOiJjZXJ2ZXplcm8ifSwiYXBwIjoiVFAgTGEgQ29tYW5kYSJ9.P0yyrpn4oZgzebtP9JRPEd6-fHgESjn-hqIDEa6F4bc",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "kevin",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445874",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/todos/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"todos",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Listar Pedidos Bartender",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "juan pablo",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445875",
+													"description": "Login",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/todos/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"todos",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Listar Pedidos Cocinero",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyNzEsImV4cCI6MTcwMDY1NDI3MSwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoic2FudGlhZ28iLCJkbmkiOjQzNDQ1ODc2LCJyb2wiOiJjb2NpbmVybyJ9LCJhcHAiOiJUUCBMYSBDb21hbmRhIn0.FV3Mf_AgNIwbbzHS90ZZ3U82IctNNaFy7wxL2QT6lGY",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "santiago",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445876",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/todos/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"todos",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Listar Pedidos Mozo",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "alan",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445877",
+													"description": "Login",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/todos/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"todos",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Elaborar Pedido L",
+							"item": [
+								{
+									"name": "Cervezero Elabora Pedido",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "kevin",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445874",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_pedido",
+													"value": "1002",
+													"description": "Pedido a Elaborar",
+													"type": "text"
+												},
+												{
+													"key": "minutos_elaboracion",
+													"value": "15",
+													"description": "Pedido a Elaborar",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/elaborar/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"elaborar",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Bartender Elabora Pedido",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyNTUsImV4cCI6MTcwMDY1NDI1NSwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoianVhbiBwYWJsbyIsImRuaSI6NDM0NDU4NzUsInJvbCI6ImJhcnRlbmRlciJ9LCJhcHAiOiJUUCBMYSBDb21hbmRhIn0.goykuyBLxxet-QYDkJMuIVMr_hsIIdcPA497qLfLDMM",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "juan pablo",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445875",
+													"description": "Login",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "numero_pedido",
+													"value": "1003",
+													"description": "Pedido a Elaborar",
+													"type": "text"
+												},
+												{
+													"key": "minutos_elaboracion",
+													"value": "2",
+													"description": "Pedido a Elaborar",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/elaborar/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"elaborar",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cocinero Elabora Pedido",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "santiago",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445876",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_pedido",
+													"value": "1001",
+													"description": "Pedido a Elaborar",
+													"type": "text"
+												},
+												{
+													"key": "minutos_elaboracion",
+													"value": "15",
+													"description": "Pedido a Elaborar",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/elaborar/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"elaborar",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Punto 4",
+					"item": [
+						{
+							"name": "Ver Estado Pedidos Siendo Cliente",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Punto 5 L",
+					"item": [
+						{
+							"name": "Listar Pedidos Socio",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyODYsImV4cCI6MTcwMDY1NDI4NiwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoiYWRyaWFuIiwiZG5pIjo0MzQ0NTg3OCwicm9sIjoic29jaW8ifSwiYXBwIjoiVFAgTGEgQ29tYW5kYSJ9.b9c6nmoFPcD3qS9JVLGz-niKh0A8SVLVH-lml6ywkto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "nombre_empleado",
+											"value": "adrian",
+											"description": "Login",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "dni_empleado",
+											"value": "43445878",
+											"description": "Login",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/app/pedido/todos/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"pedido",
+										"todos",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar Pedido Socio",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyODYsImV4cCI6MTcwMDY1NDI4NiwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoiYWRyaWFuIiwiZG5pIjo0MzQ0NTg3OCwicm9sIjoic29jaW8ifSwiYXBwIjoiVFAgTGEgQ29tYW5kYSJ9.b9c6nmoFPcD3qS9JVLGz-niKh0A8SVLVH-lml6ywkto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "nombre_empleado",
+											"value": "adrian",
+											"description": "Login",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "dni_empleado",
+											"value": "43445878",
+											"description": "Login",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "numero_pedido",
+											"value": "1001",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/app/pedido/uno/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"pedido",
+										"uno",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Punto 6 L",
+					"item": [
+						{
+							"name": "Terminar Pedido L",
+							"item": [
+								{
+									"name": "Cervezero Termina Pedido",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "kevin",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445874",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_pedido",
+													"value": "1002",
+													"description": "Pedido Terminado",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/terminar/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"terminar",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Bartender Termina Pedido",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "juan pablo",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445875",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_pedido",
+													"value": "1003",
+													"description": "Pedido Terminado",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/terminar/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"terminar",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cocinero Termina Pedido",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "santiago",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445876",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_pedido",
+													"value": "1000",
+													"description": "Pedido Terminado",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/terminar/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"terminar",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Punto 7 L",
+					"item": [
+						{
+							"name": "Servir Pedido L",
+							"item": [
+								{
+									"name": "Mozo Sirve Pedido",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "nombre_empleado",
+													"value": "alan",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "dni_empleado",
+													"value": "43445877",
+													"description": "Login",
+													"type": "text"
+												},
+												{
+													"key": "numero_pedido",
+													"value": "1003",
+													"description": "Pedido Servido",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost/P3/TP/app/pedido/servir/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"path": [
+												"P3",
+												"TP",
+												"app",
+												"pedido",
+												"servir",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Punto 8 L",
+					"item": [
+						{
+							"name": "Listar Mesas",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyODYsImV4cCI6MTcwMDY1NDI4NiwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoiYWRyaWFuIiwiZG5pIjo0MzQ0NTg3OCwicm9sIjoic29jaW8ifSwiYXBwIjoiVFAgTGEgQ29tYW5kYSJ9.b9c6nmoFPcD3qS9JVLGz-niKh0A8SVLVH-lml6ywkto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost/P3/TP/app/mesa/todas/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"mesa",
+										"todas",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Punto 9 L",
+					"item": [
+						{
+							"name": "Mozo Cobra Mesa",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyNzksImV4cCI6MTcwMDY1NDI3OSwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoiYWxhbiIsImRuaSI6NDM0NDU4NzcsInJvbCI6Im1vem8ifSwiYXBwIjoiVFAgTGEgQ29tYW5kYSJ9.UniVpBBs6IK-ME12Oy3cLg7PZqHDGlD514gx-bjbJ5M",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "numero_mesa",
+											"value": "10000",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/app/mesa/cobrar/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"mesa",
+										"cobrar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Punto 10 L",
+					"item": [
+						{
+							"name": "Socio Cierra Mesa",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDA1OTQyODYsImV4cCI6MTcwMDY1NDI4NiwiYXVkIjoiOTY0NGRiZThkOTk5NGEyMDIzNTZiZjAyZTljZWViOTVmMzkwZTJiZiIsImRhdGEiOnsibm9tYnJlIjoiYWRyaWFuIiwiZG5pIjo0MzQ0NTg3OCwicm9sIjoic29jaW8ifSwiYXBwIjoiVFAgTGEgQ29tYW5kYSJ9.b9c6nmoFPcD3qS9JVLGz-niKh0A8SVLVH-lml6ywkto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "numero_mesa",
+											"value": "10000",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost/P3/TP/app/mesa/cerrar/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"P3",
+										"TP",
+										"app",
+										"mesa",
+										"cerrar",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Punto 11 F",
+					"item": [
+						{
+							"name": "Cliente Encuesta",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Punto 12  F",
+					"item": [
+						{
+							"name": "Informe Especial",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Punto 13 F",
+					"item": [
+						{
+							"name": "Informe Especial",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CSV F",
+					"item": [
+						{
+							"name": "Descargar CSV",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Cargar CSV",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
