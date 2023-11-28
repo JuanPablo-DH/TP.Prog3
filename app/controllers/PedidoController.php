@@ -15,71 +15,67 @@ class PedidoController implements IApiUsable
 {
     private const VALIDAR_SETTER = false;
 
-    private static function get_rol_empleado($request)
-    {
-        $parametros = $request->getParsedBody();
-
-        if(isset($parametros["nombre_empleado"]) && isset($parametros["dni_empleado"]))
-        {
-            $nombre = strtolower(Input::limpiar($parametros["nombre_empleado"]));
-            $dni = intval(Input::limpiar($parametros["dni_empleado"]));
-            $empleado = Empleado::get_alta_por_dni_y_nombre($dni, $nombre);
-            return $empleado->rol;
-        }
-        
-        $header = $request->getHeaderLine('Authorization');
-        $token = trim(explode("Bearer", $header)[1]);
-        return AutentificadorJWT::ObtenerData($token)->rol;
-    }
-
     public function alta($request, $response, $args) {}
     public function baja($request, $response, $args) {}
     public function modificar($request, $response, $args) {}
     public function elaborar($request, $response, $args)
     {
         $parametros = $request->getParsedBody();
-        $rol = self::get_rol_empleado($request);
-        if(strcmp($rol, "cervezero") == 0)
+
+        $pedido = new Pedido();
+        $pedido->set_id($parametros["id"], self::VALIDAR_SETTER);
+
+        $rol = LoginMiddleware::get_empleado_sin_validar($request)->rol;
+        if(strcmp($rol, "CERVEZERO") == 0)
         {
-            $response->getBody()->write(json_encode(Pedido::cervezero_elaborar($parametros["numero_pedido"], $parametros["minutos_elaboracion"])));
+            $payload = json_encode($pedido->cervezero_elaborar());
         }
-        else if(strcmp($rol, "bartender") == 0)
+        else if(strcmp($rol, "BARTENDER") == 0)
         {
-            $response->getBody()->write(json_encode(Pedido::bartender_elaborar($parametros["numero_pedido"], $parametros["minutos_elaboracion"])));
+            $payload = json_encode($pedido->bartender_elaborar());
         }
-        else if(strcmp($rol, "cocinero") == 0)
+        else if(strcmp($rol, "COCINERO") == 0)
         {
-            $response->getBody()->write(json_encode(Pedido::cocinero_elaborar($parametros["numero_pedido"], $parametros["minutos_elaboracion"])));
+            $payload = json_encode($pedido->cocinero_elaborar());
         }
 
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
     public function terminar($request, $response, $args)
     {
         $parametros = $request->getParsedBody();
 
-        $rol = self::get_rol_empleado($request);
-        if(strcmp($rol, "cervezero") == 0)
+        $pedido = new Pedido();
+        $pedido->set_id($parametros["id"], self::VALIDAR_SETTER);
+
+        $rol = LoginMiddleware::get_empleado_sin_validar($request)->rol;
+        if(strcmp($rol, "CERVEZERO") == 0)
         {
-            $response->getBody()->write(json_encode(Pedido::cervezero_terminar($parametros["numero_pedido"])));
+            $payload = json_encode($pedido->cervezero_terminar());
         }
-        else if(strcmp($rol, "bartender") == 0)
+        else if(strcmp($rol, "BARTENDER") == 0)
         {
-            $response->getBody()->write(json_encode(Pedido::bartender_terminar($parametros["numero_pedido"])));
+            $payload = json_encode($pedido->bartender_terminar());
         }
-        else if(strcmp($rol, "cocinero") == 0)
+        else if(strcmp($rol, "COCINERO") == 0)
         {
-            $response->getBody()->write(json_encode(Pedido::cocinero_terminar($parametros["numero_pedido"])));
+            $payload = json_encode($pedido->cocinero_terminar());
         }
 
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
     public function servir($request, $response, $args)
     {
         $parametros = $request->getParsedBody();
 
-        $response->getBody()->write(json_encode(Pedido::mozo_servir($parametros["numero_pedido"])));
+        $pedido = new Pedido();
+        $pedido->set_id($parametros["id"], self::VALIDAR_SETTER);
 
+        $payload = json_encode($pedido->mozo_servir());
+
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
     public function traer_todos($request, $response, $args)
@@ -88,29 +84,34 @@ class PedidoController implements IApiUsable
 
         $pedido = new Pedido();
 
-        $rol = self::get_rol_empleado($request);
+        $rol = LoginMiddleware::get_empleado_sin_validar($request)->rol;
 
-        if(strcmp($rol, "bartender") == 0)
+        if(strcmp($rol, "BARTENDER") == 0)
         {
-            $response->getBody()->write(json_encode($pedido->traer_bebidas_sin_alcohol_alta_pendiente()));
+            $pedido->set_tipo_producto("BEBIDA", self::VALIDAR_SETTER);
+            
+            $payload = json_encode($pedido->traer_pendientes_por_tipo_producto_alta());
         }
-        else if(strcmp($rol, "cervezero") == 0)
+        else if(strcmp($rol, "CERVEZERO") == 0)
         {
-            $response->getBody()->write(json_encode($pedido->traer_bebidas_con_alcohol_alta_pendiente()));
+            $pedido->set_tipo_producto("BEBIDA-ALCOHOL", self::VALIDAR_SETTER);
+            $payload = json_encode($pedido->traer_pendientes_por_tipo_producto_alta());
         }
-        else if(strcmp($rol, "cocinero") == 0)
+        else if(strcmp($rol, "COCINERO") == 0)
         {
-            $response->getBody()->write(json_encode($pedido->traer_comidas_alta_pendiente()));
+            $pedido->set_tipo_producto("COMIDA", self::VALIDAR_SETTER);
+            $payload = json_encode($pedido->traer_pendientes_por_tipo_producto_alta());
         }
-        else if(strcmp($rol, "mozo") == 0)
+        else if(strcmp($rol, "MOZO") == 0)
         {
-            $response->getBody()->write(json_encode($pedido->traer_listos_para_servir_alta()));
+            $payload = json_encode($pedido->traer_listos_para_servir_alta());
         }
         else
         {
-            $response->getBody()->write(json_encode($pedido->traer_todos()));
+            $payload = json_encode($pedido->traer_todos());
         }
 
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
     public function traer_uno($request, $response, $args)
@@ -118,10 +119,11 @@ class PedidoController implements IApiUsable
         $parametros = $request->getParsedBody();
 
         $pedido = new Pedido();
-        $pedido->set_numero_pedido($parametros["numero_pedido"], self::VALIDAR_SETTER);
+        $pedido->set_id($parametros["id"], self::VALIDAR_SETTER);
 
-        $response->getBody()->write(json_encode($pedido->traer_uno()));
+        $payload = json_encode($pedido->traer_uno());
         
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
 }

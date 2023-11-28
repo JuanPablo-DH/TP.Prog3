@@ -82,6 +82,28 @@ class Input
 
         return null;
     }
+    public static function es_mail($p_input)
+    {
+        $p_input = self::limpiar($p_input);
+
+        if(preg_match("/^[a-zA-Z0-9_\-]+@[a-zA-Z0-9_\-]+\.[a-zA-Z0-9_\-]+$/", $p_input))
+        {
+            return $p_input;
+        }
+
+        return null;
+    }
+    public static function cadena_longitud($p_input, $p_longitud_min, $p_longitud_max)
+    {
+        $p_input = strtolower($p_input);
+
+        if($p_longitud_min <= strlen($p_input) && strlen($p_input) <= $p_longitud_max)
+        {
+            return $p_input;
+        }
+
+        return null;
+    }
     public static function numerico_es_mayor_igual($p_input, $p_valor_referencia)
     {
         $p_input = self::limpiar($p_input);

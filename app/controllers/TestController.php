@@ -8,7 +8,7 @@ Juan Pablo Dongo Huaman, Div. 3°C
 
 */
 
-require_once "modelos/Input.php";
+require_once "utils/Input.php";
 
 class TestController
 {

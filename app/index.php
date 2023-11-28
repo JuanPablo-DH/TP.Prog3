@@ -35,37 +35,20 @@ require_once "middlewares/ClienteMiddleware.php";
 require_once "controllers/EmpleadoController.php";
 require_once "middlewares/EmpleadoMiddleware.php";
 
-require_once "middlewares/LoginMiddleware.php";
+require_once "controllers/EncuestaController.php";
+require_once "middlewares/EncuestaMiddleware.php";
 
-require_once "controllers/JwtController.php";
+require_once "middlewares/LoginMiddleware.php";
 
 require_once "controllers/TestController.php";
 
-
-
-
-require_once "utils/AutentificadorJWT.php";
-
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
-
-
-
 
 $app = AppFactory::create();
 $app->setBasePath("/P3/TP/app");
 $app->addErrorMiddleware(true, true, true);
 $app->addBodyParsingMiddleware();
-
-
-
-$app->group("/jwt", function(RouteCollectorProxy $group) {
-    $group->post("/crear-token", \JwtController::class . ":crear_token");
-    
-});
-
-
-
 
 $app->group("/mesa", function(RouteCollectorProxy $group) {
 
@@ -89,10 +72,9 @@ $app->group("/mesa", function(RouteCollectorProxy $group) {
     $group->post("/cerrar/", \MesaController::class . ":cerrar")
             ->add(\MesaMiddleware::class . ":validar_input_cerrar");
 
+    $group->get("/mas-usada/", \MesaController::class . ":traer_mas_usada");
+
 })->add(\LoginMiddleware::class . ":acceso_sistema_mesa");
-
-
-
 
 $app->group("/producto", function(RouteCollectorProxy $group) {
 
@@ -110,10 +92,13 @@ $app->group("/producto", function(RouteCollectorProxy $group) {
     $group->get("/uno/", \ProductoController::class . ":traer_uno")
             ->add(\ProductoMiddleware::class . ":validar_input_traer_uno");
 
+    $group->post("/cargar-csv/", \ProductoController::class . ":cargar_csv")
+            ->add(\ProductoMiddleware::class . ":validar_input_cargar_csv");
+
+    $group->get("/crear-csv/", \ProductoController::class . ":crear_csv");
+
+
 })->add(\LoginMiddleware::class . ":acceso_sistema_producto");
-
-
-
 
 $app->group("/pedido", function(RouteCollectorProxy $group) {
 
@@ -133,9 +118,6 @@ $app->group("/pedido", function(RouteCollectorProxy $group) {
 
 })->add(\LoginMiddleware::class . ":acceso_sistema_pedido");
 
-
-
-
 $app->group("/comanda", function(RouteCollectorProxy $group) {
 
     $group->post("[/]", \ComandaController::class . ":alta")
@@ -147,9 +129,6 @@ $app->group("/comanda", function(RouteCollectorProxy $group) {
             ->add(\ComandaMiddleware::class . ":validar_input_traer_uno");
 
 })->add(\LoginMiddleware::class . ":acceso_sistema_comanda");
-
-
-
 
 $app->group("/cliente", function(RouteCollectorProxy $group) {
 
@@ -168,9 +147,6 @@ $app->group("/cliente", function(RouteCollectorProxy $group) {
             ->add(\ClienteMiddleware::class . ":validar_input_traer_uno");
 
 })->add(\LoginMiddleware::class . ":acceso_sistema_cliente");
-
-
-
 
 $app->group("/empleado", function(RouteCollectorProxy $group) {
 
@@ -196,118 +172,25 @@ $app->group("/empleado", function(RouteCollectorProxy $group) {
 
 })->add(\LoginMiddleware::class . ":acceso_sistema_empleado");
 
+$app->post('/crear-token/', \EmpleadoController::class . ":crear_token")->add(\LoginMiddleware::class . ":acceso_sistema_crear_token");
 
+$app->get("/cliente-pedidos/", \ClienteController::class . ":traer_pedidos")->add(\ClienteMiddleware::class . ":validar_input_traer_pedidos");
 
+$app->group("/encuesta", function(RouteCollectorProxy $group) {
 
-$app->group("/test", function(RouteCollectorProxy $group) {
+     $group->post("[/]", \EncuestaController::class . ":alta")
+             ->add(\EncuestaMiddleware::class . ":validar_input_alta");
 
-    $group->get("/{numero_test}", \TestController::class . ":test");
-
+     $group->get("/mejores-comentarios/", \EncuestaController::class . ":traer_mejores_comentarios");
+    
 });
 
+$app->group("/test/", function(RouteCollectorProxy $group) {
 
+    $group->get("{numero_test}", \TestController::class . ":test");
 
-
-// JWT test
-$app->group('/jwt', function (RouteCollectorProxy $group) {
-
-        $group->post('/crearToken', function (Request $request, Response $response) {    
-          $parametros = $request->getParsedBody();
-      
-          $usuario = $parametros['usuario'];
-          $perfil = $parametros['perfil'];
-          $alias = $parametros['alias'];
-      
-          $datos = array('usuario' => $usuario, 'perfil' => $perfil, 'alias' => $alias);
-      
-          $token = AutentificadorJWT::CrearToken($datos);
-          $payload = json_encode(array('jwt' => $token));
-      
-          $response->getBody()->write($payload);
-          return $response
-            ->withHeader('Content-Type', 'application/json');
-        });
-      
-        $group->get('/devolverPayLoad', function (Request $request, Response $response) {
-          $header = $request->getHeaderLine('Authorization');
-          $token = trim(explode("Bearer", $header)[1]);
-      
-          try {
-            $payload = json_encode(array('payload' => AutentificadorJWT::ObtenerPayLoad($token)));
-          } catch (Exception $e) {
-            $payload = json_encode(array('error' => $e->getMessage()));
-          }
-      
-          $response->getBody()->write($payload);
-          return $response
-            ->withHeader('Content-Type', 'application/json');
-        });
-      
-        $group->get('/devolverDatos', function (Request $request, Response $response) {
-          $header = $request->getHeaderLine('Authorization');
-          $token = trim(explode("Bearer", $header)[1]);
-      
-          try {
-            $payload = json_encode(array('datos' => AutentificadorJWT::ObtenerData($token)));
-          } catch (Exception $e) {
-            $payload = json_encode(array('error' => $e->getMessage()));
-          }
-      
-          $response->getBody()->write($payload);
-          return $response
-            ->withHeader('Content-Type', 'application/json');
-        });
-      
-        $group->get('/verificarToken', function (Request $request, Response $response) {
-          $header = $request->getHeaderLine('Authorization');
-          $token = trim(explode("Bearer", $header)[1]);
-          $esValido = false;
-      
-          try {
-            AutentificadorJWT::verificarToken($token);
-            $esValido = true;
-          } catch (Exception $e) {
-            $payload = json_encode(array('error' => $e->getMessage()));
-          }
-      
-          if ($esValido) {
-            $payload = json_encode(array('valid' => $esValido));
-          }
-      
-          $response->getBody()->write($payload);
-          return $response
-            ->withHeader('Content-Type', 'application/json');
-        });
-      });
-      
-// JWT en login
-$app->group('/auth', function (RouteCollectorProxy $group) {
-      
-        $group->post('/login', function (Request $request, Response $response) {    
-          $parametros = $request->getParsedBody();
-      
-          $usuario = $parametros['usuario'];
-          $contraseña = $parametros['contraseña'];
-      
-          if($usuario == 'prueba' && $contraseña == '1234'){ // EJEMPLO!!! Acá se deberia ir a validar el usuario contra la DB
-            $datos = array('usuario' => $usuario);
-      
-            $token = AutentificadorJWT::CrearToken($datos);
-            $payload = json_encode(array('jwt' => $token));
-          } else {
-            $payload = json_encode(array('error' => 'Usuario o contraseña incorrectos'));
-          }
-      
-          $response->getBody()->write($payload);
-          return $response
-            ->withHeader('Content-Type', 'application/json');
-        });
-      
 });
-
-
 
 $app->run();
-
 
 ?>

@@ -8,7 +8,8 @@ Juan Pablo Dongo Huaman, Div. 3°C
 
 */
 
-require_once "modelos/Input.php";
+require_once "utils/Input.php";
+use Psr\Http\Message\UploadedFileInterface;
 
 class Archivador
 {
@@ -103,6 +104,48 @@ class Archivador
         $nombre_modificado = $p_nombre_archivo . "." . $filesInfo["extension"];
         $destino = $p_path_directorio . $nombre_modificado;
         return move_uploaded_file($p_archivo_files["tmp_name"], $destino);
+    }
+
+    public static function slim_archivo_subir_a_directorio(UploadedFileInterface $p_archivo_slim, $p_path_directorio)
+    {
+        $p_path_directorio = self::validar_path_directorio($p_path_directorio);
+
+        if($p_archivo_slim->getError() !== UPLOAD_ERR_OK || $p_path_directorio === null)
+        {
+            return false;
+        }
+
+        $extension = pathinfo($p_archivo_slim->getClientFilename(), PATHINFO_EXTENSION);
+        $basename = bin2hex(random_bytes(8));
+        $filename = sprintf('%s.%0.8s', $basename, $extension);
+        $destino = $p_path_directorio . $filename;
+        $p_archivo_slim->moveTo($destino);
+        return true;
+    }
+    public static function slim_archivo_subir_a_directorio_modificando_nombre(UploadedFileInterface $p_archivo_slim, $p_path_directorio, $p_nombre_archivo)
+    {
+        $p_path_directorio = self::validar_path_directorio($p_path_directorio);
+        $p_nombre_archivo = self::validar_nombre_archivo($p_nombre_archivo);
+
+        if($p_archivo_slim->getError() !== UPLOAD_ERR_OK || $p_path_directorio === null || $p_nombre_archivo === null)
+        {
+            return false;
+        }
+
+        $extension = pathinfo($p_archivo_slim->getClientFilename(), PATHINFO_EXTENSION);
+        $filename = sprintf('%s.%0.8s', $p_nombre_archivo, $extension);
+        $destino = $p_path_directorio . $filename;
+        $p_archivo_slim->moveTo($destino);
+        return true;
+    }
+    public static function slim_archivo_obtener_contenido(UploadedFileInterface $p_archivo_slim)
+    {
+        if($p_archivo_slim->getError() !== UPLOAD_ERR_OK)
+        {
+            return false;
+        }
+
+        return $p_archivo_slim->getStream();
     }
 
     /**#### Elimina un archivo de una ruta espefica.

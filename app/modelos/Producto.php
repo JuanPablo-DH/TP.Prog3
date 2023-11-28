@@ -8,69 +8,72 @@ Juan Pablo Dongo Huaman, Div. 3°C
 
 */
 
-require_once "modelos/Input.php";
-require_once "modelos/Movimiento.php";
 require_once "bd/AccesoDatos.php";
+require_once "modelos/Pedido.php";
+require_once "utils/Input.php";
+require_once "utils/TipoProducto.php";
+require_once "utils/Movimiento.php";
 
 class Producto
 {
-    public $numero_producto; // Numerico mayor a 100
-    public $tipo; // Bebida Con/Sin Alcohool | Comida
-    public $nombre; // Nombre de la comida | bebida
-    public $stock; // Cantidad de la comida | bebida
-    public $precio_unidades; // Precio de la comida | bebida
+    public $id;
+    public $tipo_producto;
+    public $nombre;
+    public $duracion_estimada;
+    public $stock;
+    public $precio_unidades;
+    public $fecha_alta;
+    public $fecha_modificado;
     public $baja;
 
-    
     private const DB_TABLA = "productos";
-
-
-    private const NUMERO_PRODUCTO_MSJ_ERROR = ["input_error_producto"=>"Numero de producto no valido - Debe ser mayor a 100."];
-    private const TIPO_MSJ_ERROR = ["input_error_producto"=>"Tipo de producto no valido - Debe ser 'bebida' o 'comida'."];
-    private const NOMBRE_MSJ_ERROR = ["input_error_producto"=>"Nombre de producto no valido - Debe ser solo letras y/o con signo '-' (guion), y puede tener hasta 30 caracteres como maximo"];
-    private const STOCK_MSJ_ERROR = ["input_error_producto"=>"Stock de producto no valido - Debe ser positivo o cero."];
-    private const PRECIO_UNIDADES_MSJ_ERROR = ["input_error_producto"=>"Precio de unidades del producto no valido - Debe ser positivo."];
-    private const BAJA_MSJ_ERROR = ["input_error_producto"=>"Estado baja de producto no valido. Debe ser '1' para [true] o '0' para [false]"];
 
 
 
 
     // #region Validadores
-    public static function validar_numero_producto($p_numero_producto)
+    public static function validar_id($p_id)
     {
-        $p_numero_producto = Input::numerico_es_mayor_igual($p_numero_producto, 100);
-
-        if($p_numero_producto === null)
+        $p_id = Input::numerico_es_mayor_igual($p_id, 100);
+        if($p_id === null)
         {
-            throw new Exception(json_encode(self::NUMERO_PRODUCTO_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_producto"=>"Id no valido - Debe ser mayor o igual a 100"]));
         }
 
-        return (int)$p_numero_producto;
+        return (int)$p_id;
     }
     public static function validar_tipo($p_tipo)
     {
-        $p_tipo = Input::limpiar($p_tipo);
-        $p_tipo = strtolower($p_tipo);
+        $p_tipo = strtoupper(Input::limpiar($p_tipo));
 
-        if(strcmp($p_tipo, "bebida") != 0 &&
-           strcmp($p_tipo, "bebida-alcohol") != 0 &&
-           strcmp($p_tipo, "comida") != 0)
+        $tipo_producto = TipoProducto::get_por_nombre($p_tipo);
+        if($tipo_producto === null)
         {
-            throw new Exception(json_encode(self::TIPO_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_producto"=>"Tipo no valido - No existe el tipo '$p_tipo'"]));
         }
 
-        return $p_tipo;
+        return $tipo_producto->nombre;
     }
     public static function validar_nombre($p_nombre)
     {
         $p_nombre = Input::es_alias_con_guiones($p_nombre, 1, 30);
-
         if($p_nombre === null)
         {
-            throw new Exception(json_encode(self::NOMBRE_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_producto"=>"Nombre no valido - Debe ser solo letras y/o con signo '-' (guion), y puede tener hasta 30 caracteres como maximo"]));
         }
 
         return $p_nombre;
+    }
+    public static function validar_duracion_estimada($p_duracion_estimada)
+    {
+        $p_duracion_estimada = Input::es_numerico($p_duracion_estimada, 1, 90);
+
+        if($p_duracion_estimada === null)
+        {
+            throw new Exception(json_encode(["error_input_producto"=>"Duracion estimada no valida - Debe ser un valor en minutos entre 1 y 90 inclusive"]));
+        }
+
+        return (int)$p_duracion_estimada;
     }
     public static function validar_stock($p_stock)
     {
@@ -78,7 +81,7 @@ class Producto
 
         if($p_stock === null)
         {
-            throw new Exception(json_encode(self::STOCK_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_producto"=>"Stock no valido - Debe ser positivo o cero."]));
         }
 
         return (int)$p_stock;
@@ -89,21 +92,10 @@ class Producto
 
         if($p_precio_unidades === null)
         {
-            throw new Exception(json_encode(self::PRECIO_UNIDADES_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_producto"=>"Precio de unidades no valido - Debe ser positivo."]));
         }
         
         return (float)$p_precio_unidades;
-    }
-    public static function validar_baja($p_baja)
-    {
-        $p_baja = Input::convertir_a_booleano($p_baja);
-
-        if($p_baja === null)
-        {
-            throw new Exception(json_encode(self::BAJA_MSJ_ERROR));
-        }
-
-        return $p_baja;
     }
     // #endregion Validadores
 
@@ -111,26 +103,26 @@ class Producto
 
 
     // #region Setters
-    public function set_numero_producto($p_numero_producto, $p_validar)
+    public function set_id($p_id, $p_validar)
     {
         if($p_validar)
         {
-            $this->numero_producto = self::validar_numero_producto($p_numero_producto);
+            $this->id = self::validar_id($p_id);
         }
         else
         {
-            $this->numero_producto = intval(Input::limpiar($p_numero_producto));
+            $this->id = intval(Input::limpiar($p_id));
         }
     }
     public function set_tipo($p_tipo, $p_validar)
     {
         if($p_validar)
         {
-            $this->tipo = self::validar_tipo($p_tipo);
+            $this->tipo_producto = self::validar_tipo($p_tipo);
         }
         else
         {
-            $this->tipo = strtolower(Input::limpiar($p_tipo));
+            $this->tipo_producto = strtoupper(Input::limpiar($p_tipo));
         }
     }
     public function set_nombre($p_nombre, $p_validar)
@@ -142,6 +134,17 @@ class Producto
         else
         {
             $this->nombre = strtolower(Input::limpiar($p_nombre));
+        }
+    }
+    public function set_duracion_estimada($p_duracion_estimada, $p_validar)
+    {
+        if($p_validar)
+        {
+            $this->duracion_estimada = self::validar_duracion_estimada($p_duracion_estimada);
+        }
+        else
+        {
+            $this->duracion_estimada = intval(Input::limpiar($p_duracion_estimada));
         }
     }
     public function set_stock($p_stock, $p_validar)
@@ -166,16 +169,13 @@ class Producto
             $this->precio_unidades = floatval(Input::limpiar($p_precio_unidades));
         }
     }
-    public function set_baja($p_baja, $p_validar)
+    private function set_fecha_alta()
     {
-        if($p_validar)
-        {
-            $this->baja = self::validar_baja($p_baja);
-        }
-        else
-        {
-            $this->baja = boolval(Input::limpiar($p_baja));
-        }
+        $this->fecha_alta = new DateTime("now");
+    }
+    private function set_fecha_modificado()
+    {
+        $this->fecha_modificado = new DateTime("now");
     }
     // #endregion Setters
 
@@ -183,93 +183,192 @@ class Producto
 
 
     // #region Utilidades
-    public static function validar_pedido($p_pedido)
+    
+    public static function add($p_producto, $p_crear_id, $p_asignar_fecha_alta)
     {
-        if(self::existe_alta_cadena_por_igualdad("nombre", $p_pedido->nombre) === false)
+        if($p_crear_id)
         {
-            return "No existe un producto con el nombre '$p_pedido->nombre'";
+            $p_producto->id = self::crear_id();
         }
 
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                               FROM $db_tabla
-                                               WHERE nombre = :nombre
-                                                     AND
-                                                     :cantidad_unidades <= stock
-                                                     AND
-                                                     baja = '0'");
-        $consulta->bindParam(":nombre", $p_pedido->nombre);
-        $consulta->bindParam(":cantidad_unidades", $p_pedido->cantidad_unidades);
-        $consulta->execute();
-        if($consulta->rowCount() === 1)
+        $consulta = $accesoDatos->GetConsulta("INSERT INTO $db_tabla
+                                                           (id,
+                                                            id_tipo_producto,
+                                                            nombre,
+                                                            duracion_estimada,
+                                                            stock,
+                                                            precio_unidades,
+                                                            fecha_alta,
+                                                            baja)
+                                                    VALUES
+                                                           (:id,
+                                                            :id_tipo_producto,
+                                                            :nombre,
+                                                            :duracion_estimada,
+                                                            :stock,
+                                                            :precio_unidades,
+                                                            :fecha_alta,
+                                                            '0')");
+        $consulta->bindParam(':id', $p_producto->id);
+        $id_tipo_producto = TipoProducto::get_por_nombre($p_producto->tipo_producto)->id;
+        $consulta->bindParam(':id_tipo_producto', $id_tipo_producto);
+        $consulta->bindParam(":nombre", $p_producto->nombre);
+        $consulta->bindParam(":duracion_estimada", $p_producto->duracion_estimada);
+        $consulta->bindParam(":stock", $p_producto->stock);
+        $consulta->bindParam(":precio_unidades", $p_producto->precio_unidades);
+        if($p_asignar_fecha_alta)
         {
-            return true;
+            $p_producto->set_fecha_alta();
         }
-
-        return "No hay stock suficiente del producto '$p_pedido->nombre' para '$p_pedido->cantidad_unidades' unidades.";
-    }
-    public static function set_pedido($p_pedido)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                                 FROM $db_tabla
-                                                WHERE nombre = :nombre
-                                                      AND
-                                                      :cantidad_unidades <= stock
-                                                      AND
-                                                      baja = '0'");
-        $consulta->bindParam(":nombre", $p_pedido->nombre);
-        $consulta->bindParam(":cantidad_unidades", $p_pedido->cantidad_unidades);
+        $fecha_alta_formato = $p_producto->fecha_alta->format("Y-m-d H:i:s");
+        $consulta->bindParam(':fecha_alta', $fecha_alta_formato);
         $consulta->execute();
-        $producto = $consulta->fetchObject("Producto");
-        if($producto != false)
-        {
-            $producto->stock -= $p_pedido->cantidad_unidades;
-            self::set($producto);
-            $p_pedido->tipo = $producto->tipo;
-            $p_pedido->precio_unidades = $producto->precio_unidades;
-            return true;
-        }
 
-        return false;
+        return (self::get($p_producto->id) !== null);
     }
     public static function set($p_producto)
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
         $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
-                                                  SET tipo = :tipo,
+                                                  SET id_tipo_producto = :id_tipo_producto,
                                                       nombre = :nombre,
+                                                      duracion_estimada = :duracion_estimada,
                                                       stock = :stock,
                                                       precio_unidades = :precio_unidades,
+                                                      fecha_modificado = :fecha_modificado,
                                                       baja = :baja
-                                                WHERE numero_producto = :numero_producto");
-        $consulta->bindParam(":numero_producto", $p_producto->numero_producto);
-        $consulta->bindParam(':tipo', $p_producto->tipo);
+                                                WHERE id = :id");
+        $consulta->bindParam(":id", $p_producto->id);
+        $id_tipo_producto = TipoProducto::get_por_nombre($p_producto->tipo_producto)->id;
+        $consulta->bindParam(':id_tipo_producto', $id_tipo_producto);
         $consulta->bindParam(":nombre", $p_producto->nombre);
+        $consulta->bindParam(":duracion_estimada", $p_producto->duracion_estimada);
         $consulta->bindParam(":stock", $p_producto->stock);
         $consulta->bindParam(":precio_unidades", $p_producto->precio_unidades);
+        $p_producto->set_fecha_modificado();
+        $fecha_modificado_formato = $p_producto->fecha_modificado->format("Y-m-d H:i:s");
+        $consulta->bindParam(':fecha_modificado', $fecha_modificado_formato);
         $consulta->bindParam(":baja", $p_producto->baja);
         return $consulta->execute();
     }
-    public static function get($p_numero_producto)
+    public static function del($p_producto)
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                               FROM $db_tabla
-                                               WHERE numero_producto = :numero_producto");
-        $consulta->bindParam(":numero_producto", $p_numero_producto);
-        $consulta->execute();
-        return $consulta->fetchObject("Producto");
+        $consulta = $accesoDatos->GetConsulta("DELETE FROM $db_tabla
+                                                     WHERE id = :id");
+        $consulta->bindParam(":id", $p_producto->id);
+        return $consulta->rowCount();
     }
+    public static function del_log($p_producto)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
+                                                  SET baja = '1'
+                                                WHERE id = :id");
+        $consulta->bindParam(":id", $p_producto->id);
+
+        return $consulta->execute();
+    }
+    public static function get($p_id)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = productos.id_tipo_producto) AS tipo_producto,
+                                                      nombre,
+                                                      duracion_estimada,
+                                                      stock,
+                                                      precio_unidades,
+                                                      fecha_alta,
+                                                      baja
+                                               FROM $db_tabla
+                                               WHERE id = :id");
+        $consulta->bindParam(":id", $p_id);
+        $consulta->execute();
+
+        $producto = $consulta->fetchObject("Producto");
+        if($producto !== false)
+        {
+            return $producto;
+        }
+
+        return null;
+    }
+    public static function get_alta($p_id)
+    {
+        $producto = self::get($p_id);
+
+        if($producto !== null && $producto->baja === 0)
+        {
+            return $producto;
+        }
+
+        return null;
+    }
+    public static function get_por_nombre($p_nombre)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = productos.id_tipo_producto) AS tipo_producto,
+                                                      nombre,
+                                                      duracion_estimada,
+                                                      stock,
+                                                      precio_unidades,
+                                                      fecha_alta,
+                                                      baja
+                                               FROM $db_tabla
+                                               WHERE nombre = :nombre");
+        $consulta->bindParam(":nombre", $p_nombre);
+        $consulta->execute();
+
+        $producto = $consulta->fetchObject("Producto");
+        if($producto !== false)
+        {
+            return $producto;
+        }
+
+        return null;
+    }
+    public static function get_por_nombre_alta($p_nombre)
+    {
+        $producto = self::get_por_nombre($p_nombre);
+
+        if($producto !== null && $producto->baja === 0)
+        {
+            return $producto;
+        }
+
+        return null;
+    }
+    public static function get_all_alta()
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = productos.id_tipo_producto) AS tipo_producto,
+                                                      nombre,
+                                                      duracion_estimada,
+                                                      stock,
+                                                      precio_unidades,
+                                                      fecha_alta,
+                                                      baja
+                                               FROM $db_tabla
+                                               WHERE baja = '0'");
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS, "Producto");
+    }
+
     private static function existe_cadena_por_igualdad($p_atributo, $p_valor)
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_producto
+        $consulta = $accesoDatos->GetConsulta("SELECT id
                                                  FROM $db_tabla
                                                 WHERE BINARY $p_atributo = :$p_atributo");
         $consulta->bindParam(":$p_atributo" , $p_valor);
@@ -286,7 +385,7 @@ class Producto
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_producto
+        $consulta = $accesoDatos->GetConsulta("SELECT id
                                                  FROM $db_tabla
                                                 WHERE $p_atributo = :$p_atributo");
         $consulta->bindParam(":$p_atributo" , $p_valor);
@@ -303,7 +402,7 @@ class Producto
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_producto
+        $consulta = $accesoDatos->GetConsulta("SELECT id
                                                  FROM $db_tabla
                                                 WHERE baja = '0'
                                                       AND
@@ -318,63 +417,178 @@ class Producto
 
         return false;
     }
-    private static function existe_alta_cadena_por_dos_igualdades($p_atributo_uno, $p_valor_uno, $p_atributo_dos, $p_valor_dos)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_producto
-                                                 FROM $db_tabla
-                                                WHERE baja = '0'
-                                                      AND
-                                                      BINARY $p_atributo_uno = :$p_atributo_uno
-                                                      AND
-                                                      BINARY $p_atributo_dos = :$p_atributo_dos");
-        $consulta->bindParam(":$p_atributo_uno" , $p_valor_uno);
-        $consulta->bindParam(":$p_atributo_dos" , $p_valor_dos);
-        $consulta->execute();
 
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-    private static function existe_alta_numerico_por_igualdad($p_atributo, $p_valor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_producto
-                                                 FROM $db_tabla
-                                                WHERE baja = '0'
-                                                      AND
-                                                      $p_atributo = :$p_atributo");
-        $consulta->bindParam(":$p_atributo" , $p_valor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
     private static function crear_id()
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("  SELECT numero_producto
+        $consulta = $accesoDatos->GetConsulta("  SELECT id
                                                    FROM $db_tabla
-                                               ORDER BY numero_producto DESC
+                                               ORDER BY id DESC
                                                   LIMIT 1");
         $consulta->execute();
         $registro = $consulta->fetchObject("Producto");
         if($registro != false)
         {
-            return ($registro->numero_producto + 1);
+            return ($registro->id + 1);
         }
 
         return 100;
+    }
+
+    public static function validar_pedido($p_pedido)
+    {
+        if(self::existe_alta_cadena_por_igualdad("nombre", $p_pedido->nombre_producto) === false)
+        {
+            return "No existe un producto con el nombre '$p_pedido->nombre_producto'";
+        }
+
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("SELECT *
+                                               FROM $db_tabla
+                                               WHERE nombre = :nombre
+                                                     AND
+                                                     :cantidad_unidades <= stock
+                                                     AND
+                                                     baja = '0'");
+        $consulta->bindParam(":nombre", $p_pedido->nombre_producto);
+        $consulta->bindParam(":cantidad_unidades", $p_pedido->cantidad_unidades);
+        $consulta->execute();
+        
+        if($consulta->rowCount() === 1)
+        {
+            return true;
+        }
+
+        return "No hay stock suficiente del producto '$p_pedido->nombre_producto' para '$p_pedido->cantidad_unidades' unidades.";
+    }
+    public static function set_pedido($p_pedido)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = productos.id_tipo_producto) AS tipo_producto,
+                                                      nombre,
+                                                      duracion_estimada,
+                                                      stock,
+                                                      precio_unidades,
+                                                      fecha_alta,
+                                                      baja
+                                                 FROM $db_tabla
+                                                WHERE nombre = :nombre
+                                                      AND
+                                                      :cantidad_unidades <= stock
+                                                      AND
+                                                      baja = '0'");
+        $consulta->bindParam(":nombre", $p_pedido->nombre_producto);
+        $consulta->bindParam(":cantidad_unidades", $p_pedido->cantidad_unidades);
+        $consulta->execute();
+        $producto = $consulta->fetchObject("Producto");
+        if($producto != false)
+        {
+            $producto->stock -= $p_pedido->cantidad_unidades;
+            self::set($producto);
+            $p_pedido->id_producto = $producto->id;
+            $p_pedido->precio_unidades = $producto->precio_unidades;
+            $p_pedido->duracion_estimada = $producto->duracion_estimada;
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function crear_csv()
+    {
+        $lista_productos = self::get_all_alta();
+        $contenido_csv = "id,tipo_producto,nombre,duracion_estimada,stock,precio_unidades\n";
+
+        if(count($lista_productos) > 0)
+        {
+            foreach($lista_productos as $producto)
+            {
+                $contenido_csv .= "$producto->id,$producto->tipo_producto,$producto->nombre,$producto->duracion_estimada,$producto->stock,$producto->precio_unidades\n";
+            }
+        }
+        
+        return $contenido_csv;
+    }
+    public static function cargar_csv($p_contenido, $p_validar)
+    {
+        $lista_productos = array();
+        $contador_cargas = 0;
+
+        $lista_lineas = explode("\n", $p_contenido);
+        if($lista_lineas !== false && count($lista_lineas) > 0)
+        {
+            for($i=1; $i<count($lista_lineas); $i++)
+            {
+                $lista_atributos = explode(',', $lista_lineas[$i]);
+
+                if($lista_atributos !== false && count($lista_atributos) === 6)
+                {
+                    $producto = new Producto();
+                    $producto->set_id($lista_atributos[0], $p_validar);
+                    $producto->set_tipo($lista_atributos[1], $p_validar);
+                    $producto->set_nombre($lista_atributos[2], $p_validar);
+                    $producto->set_duracion_estimada($lista_atributos[3], $p_validar);
+                    $producto->set_stock($lista_atributos[4], $p_validar);
+                    $producto->set_precio_unidades($lista_atributos[5], $p_validar);
+                    array_push($lista_productos, $producto);
+                }
+            }
+        }
+
+        if(count($lista_productos) > 0)
+        {
+            foreach($lista_productos as $producto)
+            {
+                if(self::existe_numerico_por_igualdad("id", $producto->id))
+                {
+                    self::set($producto);
+                    $contador_cargas++;
+                }
+                else
+                {
+                    self::add($producto, false, true);
+                    $contador_cargas++;
+                }
+            }
+        }
+
+        if($contador_cargas > 0)
+        {
+            return ["producto_cargar_csv"=>"Realizado"];
+        }
+        
+        return ["producto_cargar_csv"=>"No se realizo ninguna carga"];
+    }
+    public static function validar_csv($p_contenido)
+    {
+        $lista_lineas = explode("\n", $p_contenido);
+        $contador_exitos = 0;
+
+        for($i=1; $i<count($lista_lineas); $i++)
+        {
+            $lista_atributos = explode(',', $lista_lineas[$i]);
+            if($lista_atributos !== false && count($lista_atributos) === 6)
+            {
+                self::validar_id($lista_atributos[0]);
+                self::validar_tipo($lista_atributos[1]);
+                self::validar_nombre($lista_atributos[2]);
+                self::validar_duracion_estimada($lista_atributos[3]);
+                self::validar_stock($lista_atributos[4]);
+                self::validar_precio_unidades($lista_atributos[5]);
+                $contador_exitos++;
+            }
+        }
+
+        if($contador_exitos > 0)
+        { 
+            return true;
+        }
+
+        return false;
     }
     // #endregion Utilidades
 
@@ -382,140 +596,104 @@ class Producto
 
 
     // #region Funcionalidades
-    public function alta($p_dni_empleado)
+    public function alta($p_id_empleado)
     {
-        if(self::existe_cadena_por_igualdad("nombre", $this->nombre) === true)
+        $producto = self::get_por_nombre_alta($this->nombre);
+        if($producto !== null)
         {
-            return ["alta_producto_error"=>"No se pudo hacer porque ya existe el nombre '$this->nombre'"];
+            return ["error_alta_producto"=>"No se pudo hacer porque ya existe el nombre '$this->nombre'"];
         }
 
-        $this->numero_producto = self::crear_id();
-
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("INSERT INTO $db_tabla
-                                                           (numero_producto,
-                                                           tipo,
-                                                           nombre,
-                                                           stock,
-                                                           precio_unidades,
-                                                           baja)
-                                                    VALUES
-                                                           (:numero_producto,
-                                                           :tipo,
-                                                           :nombre,
-                                                           :stock,
-                                                           :precio_unidades,
-                                                           '0')");
-        $consulta->bindParam(':numero_producto', $this->numero_producto);
-        $consulta->bindParam(':tipo', $this->tipo);
-        $consulta->bindParam(":nombre", $this->nombre);
-        $consulta->bindParam(":stock", $this->stock);
-        $consulta->bindParam(":precio_unidades", $this->precio_unidades);
-        $consulta->execute();
-
-        if(self::existe_numerico_por_igualdad("numero_producto", $this->numero_producto) === false)
+        if(self::add($this, true, true) === false)
         {
             return ["alta_producto_error"=>"No se pudo hacer"];
         }
         
-        Movimiento::add($p_dni_empleado, "Realizo el alta del producto '$this->numero_producto'");
+        Movimiento::add($p_id_empleado, "Realizo el alta del producto '$this->id'");
         return ["alta_producto"=>"Realizado"];
     }
-    public function baja($p_dni_empleado)
+    public function baja($p_id_empleado)
     {
-        if(self::existe_numerico_por_igualdad("numero_producto", $this->numero_producto) === false)
+        $producto = self::get_alta($this->id);
+        if($producto === null)
         {
-            return ["baja_producto_error"=>"No se pudo hacer porque no existe el numero de producto '$this->numero_producto'"];
+            return ["error_baja_producto"=>"No existe el producto '$this->id'"];
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("DELETE FROM $db_tabla
-                                               WHERE numero_producto = :numero_producto");
-        $consulta->bindParam(":numero_producto", $this->numero_producto);
-        $consulta->execute();
-        $registros_afectados = $consulta->rowCount();
+        $registros_afectados = self::del($this);
         switch($registros_afectados)
         {
             case 1:
-                Movimiento::add($p_dni_empleado, "Realizo la baja del producto '$this->numero_producto'");
+                Movimiento::add($p_id_empleado, "Realizo la baja del producto '$this->id'");
                 return ["baja_producto"=>"Realizado"];
             break;
 
             case 0:
-                return ["baja_producto_error"=>"No se pudo hacer"];
+                return ["error_baja_producto"=>"No se pudo hacer"];
             break;
 
             default:
-                return ["baja_producto_error"=>"Se realizo, pero se eliminaron '$registros_afectados' registros"];
+                return ["error_baja_producto"=>"Se realizo, pero se eliminaron '$registros_afectados' registros"];
             break;
         }
     }
-    public function baja_logica($p_dni_empleado)
+    public function baja_logica($p_id_empleado)
     {
-        if(self::existe_numerico_por_igualdad("numero_producto", $this->numero_producto) === false)
+        $producto = self::get_alta($this->id);
+        if($producto === null)
         {
-            return ["baja_logica_producto_error"=>"No se pudo hacer porque no existe el numero de producto '$this->numero_producto'"];
+            return ["error_baja_logica_producto"=>"No existe el producto '$this->id'"];
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
-                                                  SET baja = '1'
-                                                WHERE numero_producto = :numero_producto");
-        $consulta->bindParam(":numero_producto", $this->numero_producto);
-        if($consulta->execute() === false)
+        if(self::del_log($this) === false)
         {
-            return ["baja_logica_producto_error"=>"No se pudo hacer"];
+            return ["error_baja_logica_producto"=>"No se pudo hacer"];
         }
         
-        Movimiento::add($p_dni_empleado, "Realizo la baja logica del producto '$this->numero_producto'");
-        return ["baja_logica_producto"=>"Realizado"];
+        Movimiento::add($p_id_empleado, "Realizo la baja logica del producto '$this->id'");
+        return ["error_baja_logica_producto"=>"Realizado"];
     }
     public function modificar($p_dni_empleado)
     {
-        if(self::existe_numerico_por_igualdad("numero_producto", $this->numero_producto) === false)
+        $producto = self::get_alta($this->id);
+        if($producto === null)
         {
-            return ["modificar_producto_error"=>"No se pudo hacer porque no existe el numero de producto '$this->numero_producto'"];
+            return ["error_modificar_producto"=>"No existe el producto '$this->id'"];
         }
 
-        $producto = Producto::get($this->numero_producto);
-        $producto->baja_logica($p_dni_empleado);
+        if(self::del_log($producto) === false)
+        {
+            return ["error_modificar_producto"=>"No se pudo hacer"];
+        }
 
         if(self::existe_alta_cadena_por_igualdad("nombre", $this->nombre) === true)
         {
-            return ["modificar_producto_error"=>"No se pudo hacer porque ya existe un producto con el nombre '$this->nombre'"];
+            return ["error_modificar_producto"=>"No se pudo hacer porque ya existe un producto con el nombre '$this->nombre'"];
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
-                                                  SET tipo = :tipo,
-                                                      nombre = :nombre,
-                                                      stock = :stock,
-                                                      precio_unidades = :precio_unidades,
-                                                      baja = :baja
-                                                WHERE numero_producto = :numero_producto");
-        $consulta->bindParam(":numero_producto", $this->numero_producto);
-        $consulta->bindParam(':tipo', $this->tipo);
-        $consulta->bindParam(":nombre", $this->nombre);
-        $consulta->bindParam(":stock", $this->stock);
-        $consulta->bindParam(":precio_unidades", $this->precio_unidades);
-        $consulta->bindParam(":baja", $this->baja);
-        if($consulta->execute() === false)
+        $producto->baja = false;
+
+        if(self::set($this) === false)
         {
-            return ["modificar_producto_error"=>"No se pudo hacer"];
+            return ["error_modificar_producto"=>"No se pudo hacer"];
         }
         
-        Movimiento::add($p_dni_empleado, "Realizo la modificacion del producto '$this->numero_producto'");
+        Movimiento::add($p_dni_empleado, "Realizo la modificacion del producto '$this->id'");
         return ["modificar_producto"=>"Realizado"];
     }
     public function traer_todos()
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT * FROM $db_tabla");
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = productos.id_tipo_producto) AS tipo_producto,
+                                                      nombre,
+                                                      duracion_estimada,
+                                                      stock,
+                                                      precio_unidades,
+                                                      fecha_alta,
+                                                      baja
+                                                 FROM $db_tabla");
         $consulta->execute();
 
         return ["lista_productos"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Producto")];
@@ -524,7 +702,14 @@ class Producto
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = productos.id_tipo_producto) AS tipo_producto,
+                                                      nombre,
+                                                      duracion_estimada,
+                                                      stock,
+                                                      precio_unidades,
+                                                      fecha_alta,
+                                                      baja
                                                  FROM $db_tabla
                                                  WHERE baja = '0'");
         $consulta->execute();
@@ -533,17 +718,25 @@ class Producto
     }
     public function traer_uno()
     {
-        if(self::existe_numerico_por_igualdad("numero_producto", $this->numero_producto) === false)
+        $producto = self::get_alta($this->id);
+        if($producto === null)
         {
-            return ["traer_un_producto_error"=>"No se pudo hacer porque no existe el numero de producto '$this->numero_producto'"];
+            return ["error_baja_producto"=>"No existe el producto '$this->id'"];
         }
 
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = productos.id_tipo_producto) AS tipo_producto,
+                                                      nombre,
+                                                      duracion_estimada,
+                                                      stock,
+                                                      precio_unidades,
+                                                      fecha_alta,
+                                                      baja
                                                FROM $db_tabla
-                                               WHERE numero_producto = :numero_producto");
-        $consulta->bindParam(":numero_producto", $this->numero_producto);
+                                               WHERE id = :id");
+        $consulta->bindParam(":id", $this->id);
         $consulta->execute();
 
         return ["producto"=>$consulta->fetchObject("Producto")];

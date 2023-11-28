@@ -8,43 +8,63 @@ Juan Pablo Dongo Huaman, Div. 3°C
 
 */
 
-require_once "modelos/Input.php";
-require_once "modelos/Movimiento.php";
 require_once "bd/AccesoDatos.php";
+require_once "utils/Input.php";
+require_once "utils/TipoRol.php";
+require_once "utils/Movimiento.php";
 
 class Empleado
 {
-    public $numero_empleado; // Int - Positivo
-    public $nombre; // String - 30 caracteres
-    public $apellido; // String - 30 caracteres
-    public $dni; // Int - 8 digitos
-    public $rol; // bartender | cervezero | cocinero | mozo | socio
+    public $id;
+    public $mail;
+    public $contrasenia;
+    public $nombre;
+    public $apellido;
+    public $dni;
+    public $rol;
+    public $activo;
+    public $fecha_alta;
+    public $fecha_modificado;
     public $baja;
 
     private const DB_TABLA = "empleados";
 
 
-    private const NUMERO_EMPLEADO_MSJ_ERROR = ["input_error_empleado"=>"Numero de empleado no valido - Debe ser positivo"];
-    private const NOMBRE_MSJ_ERROR = ["input_error_empleado"=>"Nombre de empleado no valido - Debe ser solo letras, puede haber espacios y tener menos de 30 caracteres"];
-    private const APELLIDO_MSJ_ERROR = ["input_error_empleado"=>"Apellido de empleado no valido - Debe ser solo letras, puede haber espacios y tener menos de 30 caracteres"];
-    private const DNI_MSJ_ERROR = ["input_error_empleado"=>"Dni de empleado no valido - Debe ser de 8 digitos y estar entre 30.000.000 y 99.999.999 inclusive"];
-    private const ROL_MSJ_ERROR = ["input_error_empleado"=>"Rol de empleado no valido - Debe ser 'bartender', 'cervezero', 'cocinero', 'mozo' o 'socio'"];
-    private const BAJA_MSJ_ERROR = ["input_error_empleado"=>"Estado baja de empleado no valido - Debe ser '1' para [true] o '0' para [false]"];
-
-
 
 
     // #region Validadores
-    public static function validar_numero_empleado($p_numero_empleado)
+    public static function validar_id($p_id)
     {
-        $p_numero_empleado = Input::numerico_es_mayor_igual($p_numero_empleado, 1);
+        $p_id = Input::numerico_es_mayor_igual($p_id, 1);
 
-        if($p_numero_empleado === null)
+        if($p_id === null)
         {
-            throw new Exception(json_encode(self::NUMERO_EMPLEADO_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_empleado"=>"Id no valido - Debe ser positivo"]));
         }
 
-        return (int)$p_numero_empleado;
+        return (int)$p_id;
+    }
+    public static function validar_mail($p_mail)
+    {
+        $p_mail = Input::es_mail($p_mail);
+
+        if($p_mail === null)
+        {
+            throw new Exception(json_encode(["error_input_empleado"=>"Mail de empleado no valido - Debe cumplir con este formato '[alfanumerico/guion/guiones]@[alfanumerico/guion/guiones].[alfanumerico/guion/guiones]'"]));
+        }
+
+        return $p_mail;
+    }
+    public static function validar_contrasenia($p_contrasenia)
+    {
+        $p_contrasenia = Input::cadena_longitud($p_contrasenia, 4, 100);
+
+        if($p_contrasenia === null)
+        {
+            throw new Exception(json_encode(["error_input_empleado"=>"Contraseña de empleado no valida - Debe tener por lo menos 4 caracteres como minimo y 100 caracteres como maximo"]));
+        }
+
+        return $p_contrasenia;
     }
     public static function validar_nombre($p_nombre)
     {
@@ -52,7 +72,7 @@ class Empleado
 
         if($p_nombre === null)
         {
-            throw new Exception(json_encode(self::NOMBRE_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_empleado"=>"Nombre de empleado no valido - Debe ser solo letras, puede haber espacios y tener menos de 30 caracteres"]));
         }
 
         return $p_nombre;
@@ -63,7 +83,7 @@ class Empleado
 
         if($p_apellido === null)
         {
-            throw new Exception(json_encode(self::APELLIDO_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_empleado"=>"Apellido de empleado no valido - Debe ser solo letras, puede haber espacios y tener menos de 30 caracteres"]));
         }
 
         return $p_apellido;
@@ -71,40 +91,35 @@ class Empleado
     public static function validar_dni($p_dni)
     {
         $p_dni = Input::numerico_esta_entre($p_dni, 30000000, 99999999);
-
         if($p_dni === null)
         {
-            throw new Exception(json_encode(self::DNI_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_empleado"=>"Dni de empleado no valido - Debe ser de 8 digitos y estar entre 30.000.000 y 99.999.999 inclusive"]));
         }
 
         return (int)$p_dni;
     }
     public static function validar_rol($p_rol)
     {
-        $p_rol = Input::limpiar($p_rol);
-        $p_rol = strtolower($p_rol);
-        
-        if (strcmp($p_rol, "bartender") != 0 &&
-            strcmp($p_rol, "cervezero") != 0 &&
-            strcmp($p_rol, "cocinero") != 0 &&
-            strcmp($p_rol, "mozo") != 0 &&
-            strcmp($p_rol, "socio") != 0)
+        $p_rol = strtoupper(Input::limpiar($p_rol));
+
+        $tipo_rol = TipoRol::get_por_nombre($p_rol);
+        if($tipo_rol === null)
         {
-            throw new Exception(json_encode(self::ROL_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_empleado"=>"Rol de empleado no valido - No existe el tipo de rol '$p_rol'"]));
         }
 
-        return $p_rol;
+        return $tipo_rol->nombre;
     }
-    public static function validar_baja($p_baja)
+    public static function validar_activo($p_activo)
     {
-        $p_baja = Input::convertir_a_booleano($p_baja);
+        $p_activo = Input::convertir_a_booleano($p_activo);
 
-        if($p_baja === null)
+        if($p_activo === null)
         {
-            throw new Exception(json_encode(self::BAJA_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_empleado"=>"Estado activo de empleado no valido - Debe ser '1' para [true] o '0' para [false]"]));
         }
 
-        return $p_baja;
+        return $p_activo;
     }
     // #endregion Validadores
 
@@ -112,17 +127,38 @@ class Empleado
 
 
     // #region Setters
-    public function set_numero_empleado($p_numero_empleado, $p_validar)
+    public function set_id($p_id, $p_validar)
     {
         if($p_validar)
         {
-            $this->numero_empleado = self::validar_numero_empleado($p_numero_empleado);
+            $this->id = self::validar_id($p_id);
         }
         else
         {
-            $this->numero_empleado = intval(Input::limpiar($p_numero_empleado));
+            $this->id = intval(Input::limpiar($p_id));
         }
-        
+    }
+    public function set_mail($p_mail, $p_validar)
+    {
+        if($p_validar)
+        {
+            $this->mail = self::validar_mail($p_mail);
+        }
+        else
+        {
+            $this->mail = strtolower(Input::limpiar($p_mail));
+        }
+    }
+    public function set_contrasenia($p_contrasenia, $p_validar)
+    {
+        if($p_validar)
+        {
+            $this->contrasenia = self::validar_contrasenia($p_contrasenia);
+        }
+        else
+        {
+            $this->contrasenia = strval($p_contrasenia);
+        }
     }
     public function set_nombre($p_nombre, $p_validar)
     {
@@ -165,21 +201,27 @@ class Empleado
         }
         else
         {
-            $this->rol = strtolower(Input::limpiar($p_rol));
+            $this->rol = strtoupper(Input::limpiar($p_rol));
         }
-        
     }
-    public function set_baja($p_baja, $p_validar)
+    public function set_activo($p_activo, $p_validar)
     {
         if($p_validar)
         {
-            $this->baja = self::validar_baja($p_baja);
+            $this->activo = self::validar_activo($p_activo);
         }
         else
         {
-            $this->baja = boolval(Input::limpiar($p_baja));
+            $this->activo = boolval(Input::limpiar($p_activo));
         }
-        
+    }
+    private function set_fecha_alta()
+    {
+        $this->fecha_alta = new DateTime("now");
+    }
+    private function set_fecha_modificado()
+    {
+        $this->fecha_modificado = new DateTime("now");
     }
     // #endregion Setters
 
@@ -187,210 +229,203 @@ class Empleado
 
 
     // #region Utilidades
+    private static function add($p_empleado, $p_crear_id, $p_asignar_fecha_alta)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("INSERT INTO $db_tabla
+                                               (id,
+                                                mail,
+                                                contrasenia,
+                                                nombre,
+                                                apellido,
+                                                dni,
+                                                id_rol,
+                                                activo,
+                                                fecha_alta,
+                                                baja)
+                                               VALUES
+                                               (:id,
+                                                :mail,
+                                                :contrasenia,
+                                                :nombre,
+                                                :apellido,
+                                                :dni,
+                                                :id_rol,
+                                                :activo,
+                                                :fecha_alta,
+                                                '0')");
+        if($p_crear_id)
+        {
+            $p_empleado->id = self::crear_id();
+        }
+        $consulta->bindParam(':id', $p_empleado->id);
+        $consulta->bindParam(':mail', $p_empleado->mail);
+        $hash_contrasenia = password_hash($p_empleado->contrasenia, PASSWORD_DEFAULT);
+        $consulta->bindParam(':contrasenia', $hash_contrasenia);
+        $consulta->bindParam(':nombre', $p_empleado->nombre);
+        $consulta->bindParam(':apellido', $p_empleado->apellido);
+        $consulta->bindParam(':dni', $p_empleado->dni);
+        $id_rol = TipoRol::get_por_nombre($p_empleado->rol)->id;
+        $consulta->bindParam(':id_rol', $id_rol);
+        $consulta->bindParam(':activo', $p_empleado->activo);
+        if($p_asignar_fecha_alta)
+        {
+            $p_empleado->set_fecha_alta();
+        }
+        $fecha_alta_formato = $p_empleado->fecha_alta->format('Y-m-d H:i:s');
+        $consulta->bindParam(':fecha_alta', $fecha_alta_formato);
+        $consulta->execute();
+
+        return (self::get($p_empleado->id) !== null);
+    }
+    private static function set($p_empleado)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
+                                                  SET mail = :mail,
+                                                      contrasenia = :contrasenia,
+                                                      nombre = :nombre,
+                                                      apellido = :apellido,
+                                                      dni = :dni,
+                                                      id_rol = :id_rol,
+                                                      activo = :activo,
+                                                      fecha_modificado = :fecha_modificado,
+                                                      baja = :baja
+                                                WHERE id = :id");
+        $consulta->bindParam(':id', $p_empleado->id);
+        $consulta->bindParam(':mail', $p_empleado->mail);
+        $hash_contrasenia = password_hash($p_empleado->contrasenia, PASSWORD_DEFAULT);
+        $consulta->bindParam(':contrasenia', $hash_contrasenia);
+        $consulta->bindParam(':nombre', $p_empleado->nombre);
+        $consulta->bindParam(':apellido', $p_empleado->apellido);
+        $consulta->bindParam(':dni', $p_empleado->dni);
+        $id_rol = TipoRol::get_por_nombre($p_empleado->rol)->id;
+        $consulta->bindParam(':id_rol', $id_rol);
+        $consulta->bindParam(':activo', $p_empleado->activo);
+        $p_empleado->set_fecha_modificado();
+        $fecha_modificado_formato = $p_empleado->fecha_modificado->format('Y-m-d H:i:s');
+        $consulta->bindParam(':fecha_modificado', $fecha_modificado_formato);
+        $consulta->bindParam(':baja', $p_empleado->baja);
+
+        return $consulta->execute();
+    }
+    private static function del($p_empleado)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("DELETE FROM $db_tabla
+                                                     WHERE id = :id");
+        $consulta->bindParam(":id", $p_empleado->id);
+        return $consulta->rowCount();
+    }
+    private static function del_log($p_empleado)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
+                                                  SET baja = '1'
+                                                WHERE id = :id");
+        $consulta->bindParam(":id", $p_empleado->id);
+
+        return $consulta->execute();
+    }
     private static function get($p_numero_empleado)
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                               FROM $db_tabla
-                                               WHERE numero_empleado = :numero_empleado");
-        $consulta->bindParam(":numero_empleado", $p_numero_empleado);
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      mail,
+                                                      contrasenia,
+                                                      nombre,
+                                                      apellido,
+                                                      dni,
+                                                      (SELECT rol_tipos.nombre FROM rol_tipos WHERE rol_tipos.id = empleados.id_rol) AS rol,
+                                                      activo,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
+                                                 FROM $db_tabla
+                                                WHERE empleados.id = :id");
+        $consulta->bindParam(":id", $p_numero_empleado);
         $consulta->execute();
 
-        if($consulta->rowCount() === 1)
+        $registro = $consulta->fetchObject("Empleado");
+
+        if($registro !== false)
         {
-            return $consulta->fetchObject("Empleado");
+            return $registro;
         }
 
         return null;
     }
     public static function get_alta($p_numero_empleado)
     {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                               FROM $db_tabla
-                                               WHERE numero_empleado = :numero_empleado
-                                                 AND baja = '0'");
-        $consulta->bindParam(":numero_empleado", $p_numero_empleado);
-        $consulta->execute();
+        $empleado = self::get($p_numero_empleado);
 
-        if($consulta->rowCount() === 1)
+        if($empleado !== null && $empleado->baja === 0)
         {
-            return $consulta->fetchObject("Empleado");
+            return $empleado;
         }
 
         return null;
     }
-
-    public static function get_por_dni($p_dni)
+    public static function get_all()
     {
-        $p_dni = intval(Input::limpiar($p_dni));
-
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      mail,
+                                                      contrasenia,
+                                                      nombre,
+                                                      apellido,
+                                                      dni,
+                                                      (SELECT rol_tipos.nombre FROM rol_tipos WHERE rol_tipos.id = empleados.id_rol) AS rol,
+                                                      activo,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
+                                                 FROM $db_tabla");
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_CLASS, "Empleado");
+    }
+    public static function get_all_alta()
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      mail,
+                                                      contrasenia,
+                                                      nombre,
+                                                      apellido,
+                                                      dni,
+                                                      (SELECT rol_tipos.nombre FROM rol_tipos WHERE rol_tipos.id = empleados.id_rol) AS rol,
+                                                      activo,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
                                                  FROM $db_tabla
-                                                WHERE dni = :dni");
-        $consulta->bindParam(":dni" , $p_dni);
+                                                WHERE baja = '0'");
         $consulta->execute();
 
-        if($consulta->rowCount() === 1)
-        {
-            return $consulta->fetchObject("Empleado");
-        }
-
-        return null;
+        return $consulta->fetchAll(PDO::FETCH_CLASS, "Empleado");
     }
-    public static function get_alta_por_dni($p_dni)
-    {
-        $p_dni = intval(Input::limpiar($p_dni));
-
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                                 FROM $db_tabla
-                                                WHERE dni = :dni
-                                                  AND baja = '0'");
-        $consulta->bindParam(":dni" , $p_dni);
-        $consulta->execute();
-
-        if($consulta->rowCount() === 1)
-        {
-            return $consulta->fetchObject("Empleado");
-        }
-
-        return null;
-    }
-
-    public static function get_por_dni_y_nombre($p_dni, $p_nombre)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                                 FROM $db_tabla
-                                                WHERE dni = :dni
-                                                  AND BINARY nombre = :nombre");
-        $consulta->bindParam(":dni" , $p_dni);
-        $consulta->bindParam(":nombre" , $p_nombre);
-        $consulta->execute();
-
-        if($consulta->rowCount() === 1)
-        {
-            return $consulta->fetchObject("Empleado");
-        }
-
-        return null;
-    }
-    public static function get_alta_por_dni_y_nombre($p_dni, $p_nombre)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                                 FROM $db_tabla
-                                                WHERE dni = :dni
-                                                  AND BINARY nombre = :nombre
-                                                  AND baja = '0'");
-        $consulta->bindParam(":dni" , $p_dni);
-        $consulta->bindParam(":nombre" , $p_nombre);
-        $consulta->execute();
-
-        if($consulta->rowCount() === 1)
-        {
-            return $consulta->fetchObject("Empleado");
-        }
-
-        return null;
-    }
-
-    private static function existe_cadena_por_igualdad($pAtributo, $pValor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_empleado
-                                                 FROM $db_tabla
-                                                WHERE BINARY $pAtributo=:$pAtributo");
-        $consulta->bindParam(":$pAtributo" , $pValor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-    private static function existe_numerico_por_igualdad($pAtributo, $pValor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_empleado
-                                                 FROM $db_tabla
-                                                WHERE $pAtributo=:$pAtributo");
-        $consulta->bindParam(":$pAtributo" , $pValor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private static function existe_alta_cadena_por_igualdad($pAtributo, $pValor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_empleado
-                                                 FROM $db_tabla
-                                                WHERE baja = '0'
-                                                      AND
-                                                      BINARY $pAtributo=:$pAtributo");
-        $consulta->bindParam(":$pAtributo" , $pValor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-    private static function existe_alta_numerico_por_igualdad($pAtributo, $pValor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_empleado
-                                               FROM $db_tabla
-                                               WHERE baja = '0'
-                                                     AND
-                                                     $pAtributo=:$pAtributo");
-        $consulta->bindParam(":$pAtributo" , $pValor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     private static function crear_id()
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_empleado
+        $consulta = $accesoDatos->GetConsulta("SELECT *
                                                FROM $db_tabla
-                                               ORDER BY numero_empleado DESC
+                                               ORDER BY id DESC
                                                LIMIT 1");
         $consulta->execute();
 
         if($consulta->rowCount() > 0)
         {
             $registro = $consulta->fetchObject("Empleado");
-            return ($registro->numero_empleado + 1);
+            return ($registro->id + 1);
         }
             
         return 1;
@@ -401,139 +436,89 @@ class Empleado
 
 
     // #region Funcionalidades
-    public function alta($p_dni_empleado)
+    public function alta($p_id_empleado)
     {
-        if(self::existe_numerico_por_igualdad("dni", $this->dni) === true)
+        if(self::add($this, true, true) === false)
         {
-            return ["alta_empleado_error"=>"No se pudo hacer porque ya existe el dni '$this->dni'"];
+            return ["error_alta_empleado"=>"No se pudo hacer"];
         }
 
-        $this->numero_empleado = self::crear_id();
-        
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("INSERT INTO $db_tabla
-                                               (numero_empleado,
-                                                nombre,
-                                                apellido,
-                                                dni,
-                                                rol,
-                                                baja)
-                                               VALUES
-                                               (:numero_empleado,
-                                                :nombre,
-                                                :apellido,
-                                                :dni,
-                                                :rol,
-                                                '0')");
-        $consulta->bindParam(':numero_empleado', $this->numero_empleado);
-        $consulta->bindParam(':nombre', $this->nombre);
-        $consulta->bindParam(':apellido', $this->apellido);
-        $consulta->bindParam(':dni', $this->dni);
-        $consulta->bindParam(':rol', $this->rol);
-        $consulta->execute();
-
-        if(self::existe_numerico_por_igualdad("numero_empleado", $this->numero_empleado) === false)
-        {
-            return ["alta_empleado_error"=>"No se pudo hacer"];
-        }
-
-        Movimiento::add($p_dni_empleado, "Realizo el alta del empleado '$this->numero_empleado'");
+        Movimiento::add($p_id_empleado, "Realizo el alta del empleado '$this->id'");
         return ["alta_empleado"=>"Realizado"];
     }
-    public function baja($p_dni_empleado)
+    public function baja($p_id_empleado)
     {
-        if(self::existe_numerico_por_igualdad("numero_empleado", $this->numero_empleado) === false)
+        $empleado = self::get_alta($this->id);
+        if($empleado === null)
         {
-            return ["baja_empleado_error"=>"No se pudo hacer porque no existe el numero de empleado '$this->numero_empleado'"];
+            return ["error_baja_empleado"=>"No existe el empleado '$this->id'"];
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("DELETE FROM $db_tabla
-                                                     WHERE numero_empleado = :numero_empleado");
-        $consulta->bindParam(":numero_empleado", $this->numero_empleado);
-        $registros_afectados = $consulta->rowCount();
+        $registros_afectados = self::del($this);
         switch($registros_afectados)
         {
             case 1:
-                Movimiento::add($p_dni_empleado, "Realizo la baja del empleado '$this->numero_empleado'");
-                return ["baja_empleado"=>"Realizado"];
+                Movimiento::add($p_id_empleado, "Realizo la baja del empleado '$this->id'");
+                return ["error_baja_empleado"=>"Realizado"];
             break;
 
             case 0:
-                return ["baja_empleado_error"=>"No se pudo hacer"];
+                return ["error_baja_empleado_error"=>"No se pudo hacer"];
             break;
 
             default:
-                return ["baja_empleado_error"=>"Se realizo, pero se eliminaron $registros_afectados registros"];
+                return ["error_baja_empleado_error"=>"Se realizo, pero se eliminaron $registros_afectados registros"];
             break;
         }
     }
-    public function baja_logica($p_dni_empleado)
+    public function baja_logica($p_id_empleado)
     {
-        if(self::existe_numerico_por_igualdad("numero_empleado", $this->numero_empleado) === false)
+        $empleado = self::get_alta($this->id);
+        if($empleado === null)
         {
-            return ["baja_logica_empleado_error"=>"No se pudo hacer porque no existe el numero de empleado '$this->numero_empleado'"];
+            return ["error_baja_logica_empleado"=>"No existe el empleado '$this->id'"];
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
-                                                  SET baja = '1'
-                                                WHERE numero_empleado = :numero_empleado");
-        $consulta->bindParam(":numero_empleado", $this->numero_empleado);
-        if($consulta->execute() === false)
+        if(self::del_log($this) === false)
         {
-            return ["baja_logica_empleado_error"=>"No se pudo hacer"];
+            return ["error_baja_logica_empleado"=>"No se pudo hacer"];
         }
         
-        Movimiento::add($p_dni_empleado, "Realizo la baja logica del empleado '$this->numero_empleado'");
+        Movimiento::add($p_id_empleado, "Realizo la baja logica del empleado '$this->id'");
         return ["baja_logica_empleado"=>"Realizado"];
     }
-    public function modificar($p_dni_empleado)
+    public function modificar($p_id_empleado)
     {
-        if(self::existe_numerico_por_igualdad("numero_empleado", $this->numero_empleado) === false)
+        $empleado = self::get_alta($this->id);
+        if($empleado === null)
         {
-            return ["modificar_empleado_error"=>"No se pudo hacer. Porque no existe el numero de empleado '$this->numero_empleado'"];
+            return ["error_modificar_empleado"=>"No existe el empleado '$this->id'"];
         }
 
-        $this->baja_logica($p_dni_empleado);
-
-        if(self::existe_alta_numerico_por_igualdad("dni", $this->dni) === true)
+        if(self::set($this) === false)
         {
-            return ["modificar_empleado_error"=>"No se pudo hacer. Porque ya existe el dni '$this->dni'"];
-        }
-
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
-                                                  SET nombre = :nombre,
-                                                      apellido = :apellido,
-                                                      dni = :dni,
-                                                      rol = :rol,
-                                                      baja = :baja
-                                                WHERE numero_empleado = :numero_empleado");
-        $consulta->bindParam(':numero_empleado', $this->numero_empleado);
-        $consulta->bindParam(':nombre', $this->nombre);
-        $consulta->bindParam(':apellido', $this->apellido);
-        $consulta->bindParam(':dni', $this->dni);
-        $consulta->bindParam(':rol', $this->rol);
-        $consulta->bindParam(':baja', $this->baja);
-        if($consulta->execute() === false)
-        {
-            return ["modificar_empleado_error"=>"No se pudo hacer"];
+            return ["error_modificar_empleado"=>"No se pudo hacer"];
         }
         
-        Movimiento::add($p_dni_empleado, "Realizo la modificacion del empleado '$this->numero_empleado'");
-        return ["modificar_empleado"=>"Realizado"];
+        Movimiento::add($p_id_empleado, "Realizo la modificacion del empleado '$this->id'");
+        return ["modificar_empleado"=>"Realizado", "empleado_antes"=>$empleado, "empleado_despues"=>$this];
     }
-
     public function traer_todos()
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT * FROM $db_tabla");
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      mail,
+                                                      contrasenia,
+                                                      nombre,
+                                                      apellido,
+                                                      dni,
+                                                      (SELECT rol_tipos.nombre FROM rol_tipos WHERE rol_tipos.id = empleados.id_rol) AS rol,
+                                                      activo,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
+                                                 FROM $db_tabla");
         $consulta->execute();
 
         return ["lista_empleados"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Empleado")];
@@ -542,7 +527,17 @@ class Empleado
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      mail,
+                                                      contrasenia,
+                                                      nombre,
+                                                      apellido,
+                                                      dni,
+                                                      (SELECT rol_tipos.nombre FROM rol_tipos WHERE rol_tipos.id = empleados.id_rol) AS rol,
+                                                      activo,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
                                                  FROM $db_tabla
                                                 WHERE baja = '0'");
         $consulta->execute();
@@ -551,74 +546,75 @@ class Empleado
     }
     public function traer_uno()
     {
-        if(self::existe_numerico_por_igualdad("numero_empleado", $this->numero_empleado) === false)
+        $empleado = self::get($this->id);
+        if($empleado === null)
         {
-            return ["traer_un_empleado_error"=>"No se pudo hacer porque no existe el numero de empleado '$this->numero_empleado'"];
+            return ["error_traer_un_empleado"=>"No existe el empleado '$this->id'"];
+        }
+        
+        return ["empleado"=>$empleado];
+    }
+    public function traer_uno_por_rol()
+    {
+        $empleado = self::get($this->id);
+        if($empleado === null)
+        {
+            return ["error_traer_un_empleado_por_rol"=>"No existe el empleado '$this->id'"];
+        }
+        if(strcmp($empleado->rol, $this->rol) != 0)
+        {
+            return ["error_traer_un_empleado_por_rol"=>"No coincide el rol del empleado."];
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                               FROM $db_tabla
-                                               WHERE numero_empleado = :numero_empleado");
-        $consulta->bindParam(":numero_empleado", $this->numero_empleado);
-        $consulta->execute();
-
-        return ["empleado"=>$consulta->fetchObject("Empleado")];
+        return ["empleado"=>$empleado];
     }
-
     public function traer_todos_por_rol()
     {
-        if(self::existe_cadena_por_igualdad("rol", $this->rol) === false)
-        {
-            return ["traer_todos_empleados_por_rol_error"=>"No se pudo hacer porque no existe el rol '$this->rol'"];
-        }
-
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("      SELECT *
-                                                       FROM $db_tabla
-                                               WHERE BINARY rol = :rol");
-        $consulta->bindParam(":rol", $this->rol);
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      mail,
+                                                      contrasenia,
+                                                      nombre,
+                                                      apellido,
+                                                      dni,
+                                                      (SELECT rol_tipos.nombre FROM rol_tipos WHERE rol_tipos.id = empleados.id_rol) AS rol,
+                                                      activo,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
+                                                 FROM $db_tabla
+                                                WHERE empleados.id_rol = :id_rol");
+        $id_rol = TipoRol::get_por_nombre($this->rol)->id;
+        $consulta->bindParam(':id_rol', $id_rol);
         $consulta->execute();
 
         return ["lista_empleados"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Empleado")];
     }
     public function traer_todos_por_rol_alta()
     {
-        if(self::existe_alta_cadena_por_igualdad("rol", $this->rol) === false)
-        {
-            return ["traer_un_empleado_por_rol_error"=>"No se pudo hacer porque no existe el rol '$this->rol'"];
-        }
-
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      mail,
+                                                      contrasenia,
+                                                      nombre,
+                                                      apellido,
+                                                      dni,
+                                                      (SELECT rol_tipos.nombre FROM rol_tipos WHERE rol_tipos.id = empleados.id_rol) as rol,
+                                                      activo,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
                                                  FROM $db_tabla
-                                                WHERE baja = '0'
+                                                WHERE empleados.id_rol = :id_rol
                                                       AND
-                                                      BINARY rol = :rol");
-        $consulta->bindParam(":rol", $this->rol);
+                                                      empleados.baja = '0'");
+        $id_rol = TipoRol::get_por_nombre($this->rol)->id;
+        $consulta->bindParam(':id_rol', $id_rol);
         $consulta->execute();
 
         return ["lista_empleados"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Empleado")];
-    }
-    
-    public function traer_uno_por_rol()
-    {
-        if(self::existe_numerico_por_igualdad("numero_empleado", $this->numero_empleado) === false)
-        {
-            return ["traer_un_empleado_por_rol_error"=>"No se pudo hace, porque no existe el numero de empleado '$this->numero_empleado'"];
-        }
-
-        $empleado = self::get($this->numero_empleado);
-
-        if(strcmp($this->rol, $empleado->rol) != 0)
-        {
-            return ["traer_un_empleado_por_rol_error"=>"No se pudo hacer porque no coincide el rol del empleado."];
-        }
-
-        return ["empleado"=>$empleado];
     }
     // #endregion Funcionalidades
 }

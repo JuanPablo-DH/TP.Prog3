@@ -9,26 +9,12 @@ Juan Pablo Dongo Huaman, Div. 3°C
 */
 
 require_once "modelos/Cliente.php";
-require_once "modelos/Movimiento.php";
+require_once "modelos/Comanda.php";
 require_once "interfaces/IApiUsable.php";
 
 class ClienteController implements IApiUsable
 {
     private const VALIDAR_SETTER = false;
-
-    private static function get_dni_empleado($request)
-    {
-        $parametros = $request->getParsedBody();
-
-        if(isset($parametros["nombre_empleado"]) && isset($parametros["dni_empleado"]))
-        {
-            return intval(Input::limpiar($parametros["dni_empleado"]));
-        }
-        
-        $header = $request->getHeaderLine('Authorization');
-        $token = trim(explode("Bearer", $header)[1]);
-        return AutentificadorJWT::ObtenerData($token)->dni;
-    }
 
     public function alta($request, $response, $args)
     {
@@ -37,8 +23,9 @@ class ClienteController implements IApiUsable
         $cliente = new Cliente();
         $cliente->set_nombre($parametros["nombre"], self::VALIDAR_SETTER);
 
-        $response->getBody()->write(json_encode($cliente->alta(self::get_dni_empleado($request))));
+        $payload = json_encode($cliente->alta(LoginMiddleware::get_empleado_sin_validar($request)->id));
 
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
     public function baja($request, $response, $args)
@@ -46,10 +33,11 @@ class ClienteController implements IApiUsable
         $parametros = $request->getParsedBody();
 
         $cliente = new Cliente();
-        $cliente->set_numero_cliente($parametros["numero_cliente"], self::VALIDAR_SETTER);
+        $cliente->set_id($parametros["id"], self::VALIDAR_SETTER);
 
-        $response->getBody()->write(json_encode($cliente->baja_logica(self::get_dni_empleado($request))));
+        $payload = json_encode($cliente->baja_logica(LoginMiddleware::get_empleado_sin_validar($request)->id));
 
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
     public function modificar($request, $response, $args)
@@ -57,31 +45,46 @@ class ClienteController implements IApiUsable
         $parametros = $request->getParsedBody();
 
         $cliente = new Cliente();
-        $cliente->set_numero_cliente($parametros["numero_cliente"], self::VALIDAR_SETTER);
+        $cliente->set_id($parametros["id"], self::VALIDAR_SETTER);
         $cliente->set_nombre($parametros["nombre"], self::VALIDAR_SETTER);
-        $cliente->set_baja($parametros["baja"], self::VALIDAR_SETTER);
 
-        $response->getBody()->write(json_encode($cliente->modificar(self::get_dni_empleado($request))));
+        $payload = json_encode($cliente->modificar(LoginMiddleware::get_empleado_sin_validar($request)->id));
 
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
     public function traer_todos($request, $response, $args)
     {
         $cliente = new Cliente();
 
-        $response->getBody()->write(json_encode($cliente->traer_todos_alta()));
+        $payload = json_encode($cliente->traer_todos_alta());
         
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
     public function traer_uno($request, $response, $args)
     {
-        $parametros = $request->getQueryParams();
+        $parametros = $request->getParsedBody();
 
         $cliente = new Cliente();
-        $cliente->set_numero_cliente($parametros["numero_cliente"], self::VALIDAR_SETTER);
+        $cliente->set_id($parametros["numero_cliente"], self::VALIDAR_SETTER);
         
-        $response->getBody()->write(json_encode($cliente->traer_uno()));
+        $payload = json_encode($cliente->traer_uno());
         
+        $response->getBody()->write($payload);
+        return $response->withHeader("Content-Type", "application/json");
+    }
+    public function traer_pedidos($request, $response, $args)
+    {
+        $parametros = $request->getParsedBody();
+
+        $comanda = new Comanda();
+        $comanda->set_id($parametros["id_comanda"], self::VALIDAR_SETTER);
+        $comanda->set_id_mesa($parametros["id_mesa"], self::VALIDAR_SETTER);
+
+        $payload = json_encode($comanda->traer_lista_pedidos_por_id_comanda_y_id_mesa());
+        
+        $response->getBody()->write($payload);
         return $response->withHeader("Content-Type", "application/json");
     }
 }

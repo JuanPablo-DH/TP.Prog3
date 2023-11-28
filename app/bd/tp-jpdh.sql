@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-11-2023 a las 09:40:24
+-- Tiempo de generación: 28-11-2023 a las 18:03:49
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -28,8 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `clientes` (
-  `numero_cliente` varchar(6) NOT NULL,
+  `id` varchar(6) NOT NULL,
   `nombre` varchar(30) NOT NULL,
+  `fecha_alta` datetime NOT NULL,
+  `fecha_modificado` datetime DEFAULT NULL,
   `baja` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -40,14 +42,13 @@ CREATE TABLE `clientes` (
 --
 
 CREATE TABLE `comandas` (
-  `numero_comanda` int(11) NOT NULL,
-  `precio_total` decimal(10,0) NOT NULL,
-  `numero_mesa` int(11) NOT NULL,
-  `tipo_mesa` varchar(30) NOT NULL,
-  `numero_cliente` varchar(6) NOT NULL,
-  `nombre_cliente` varchar(30) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_cliente` varchar(6) NOT NULL,
+  `id_mesa` int(11) NOT NULL,
   `cantidad_clientes` int(11) NOT NULL,
-  `fecha_registro` datetime NOT NULL,
+  `precio_total` decimal(10,0) NOT NULL,
+  `fecha_alta` datetime NOT NULL,
+  `fecha_modificado` datetime DEFAULT NULL,
   `baja` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -58,11 +59,16 @@ CREATE TABLE `comandas` (
 --
 
 CREATE TABLE `empleados` (
-  `numero_empleado` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `mail` varchar(50) NOT NULL,
+  `contrasenia` varchar(100) NOT NULL,
   `nombre` varchar(30) NOT NULL,
   `apellido` varchar(30) NOT NULL,
   `dni` int(8) NOT NULL,
-  `rol` varchar(30) NOT NULL,
+  `id_rol` int(11) NOT NULL,
+  `activo` tinyint(1) NOT NULL,
+  `fecha_alta` datetime NOT NULL,
+  `fecha_modificado` datetime DEFAULT NULL,
   `baja` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -70,12 +76,32 @@ CREATE TABLE `empleados` (
 -- Volcado de datos para la tabla `empleados`
 --
 
-INSERT INTO `empleados` (`numero_empleado`, `nombre`, `apellido`, `dni`, `rol`, `baja`) VALUES
-(1, 'juan pablo', 'dongo huaman', 43445875, 'bartender', 0),
-(2, 'kevin', 'robles', 43445874, 'cervezero', 0),
-(3, 'santiago', 'robles', 43445876, 'cocinero', 0),
-(4, 'alan', 'ornat', 43445877, 'mozo', 0),
-(5, 'adrian', 'barrientos', 43445878, 'socio', 0);
+INSERT INTO `empleados` (`id`, `mail`, `contrasenia`, `nombre`, `apellido`, `dni`, `id_rol`, `activo`, `fecha_alta`, `fecha_modificado`, `baja`) VALUES
+(1, 'juanpablo@gmail.com', '$2y$10$/D6eq5Hj/u.d7629TA/svOFAN.s66Yz5QqVJAUSqLilbtsLAf/E1e', 'juan pablo', 'dongo huaman', 43000111, 1, 1, '2023-11-26 12:33:58', NULL, 0),
+(2, 'kevin@gmail.com', '$2y$10$/HOiS9cakJZfn1sgh9qrjOb6o40tkkX5sgN/Qs3xXLcPQISBDhZ8e', 'kevin', 'robles', 43222333, 2, 1, '2023-11-26 12:33:58', NULL, 0),
+(3, 'santiago@gmail.com', '$2y$10$dBmAnWEkE7U7mch68dZNSuk1ybhyK84FQ.IynY2US4CWjC7KutY5C', 'santiago', 'cespedes', 43444555, 3, 1, '2023-11-26 12:33:58', NULL, 0),
+(4, 'alan@gmail.com', '$2y$10$M30IOQjXVPV74ehwBUyFBuEBA7YxJkzLTAxrXAKJfKB7LbZehk52S', 'alan', 'ornat', 43666777, 4, 1, '2023-11-26 12:33:58', NULL, 0),
+(5, 'adrian@gmail.com', '$2y$10$/dw5eX1XrTPQFQG91IBfS.7MavRQnv6IzTla/EbKNBOodPBhK4I.C', 'adrian', 'barrientos', 43888999, 5, 1, '2023-11-26 12:33:58', NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `encuestas`
+--
+
+CREATE TABLE `encuestas` (
+  `id` int(11) NOT NULL,
+  `id_comanda` int(11) NOT NULL,
+  `id_mesa` int(11) NOT NULL,
+  `puntuacion_cervezero` int(11) NOT NULL,
+  `puntuacion_bartender` int(11) NOT NULL,
+  `puntuacion_mozo` int(11) NOT NULL,
+  `puntuacion_cocinero` int(11) NOT NULL,
+  `puntuacion_restaurante` int(11) NOT NULL,
+  `tipo_resenia` varchar(15) NOT NULL,
+  `resenia` varchar(66) NOT NULL,
+  `fecha_alta` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -84,15 +110,35 @@ INSERT INTO `empleados` (`numero_empleado`, `nombre`, `apellido`, `dni`, `rol`, 
 --
 
 CREATE TABLE `mesas` (
-  `numero_mesa` int(11) NOT NULL,
-  `numero_cliente` varchar(6) NOT NULL,
-  `numero_comanda` int(11) NOT NULL,
-  `tipo` varchar(10) NOT NULL,
-  `cantidad_clientes_maxima` int(11) NOT NULL,
-  `cantidad_clientes` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_cliente` varchar(6) DEFAULT NULL,
+  `id_comanda` int(11) DEFAULT NULL,
+  `id_tipo_mesa` int(30) NOT NULL,
   `estado` varchar(40) NOT NULL,
+  `fecha_alta` datetime NOT NULL,
+  `fecha_modificado` datetime DEFAULT NULL,
   `baja` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `mesa_tipos`
+--
+
+CREATE TABLE `mesa_tipos` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(30) NOT NULL,
+  `capacidad` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `mesa_tipos`
+--
+
+INSERT INTO `mesa_tipos` (`id`, `nombre`, `capacidad`) VALUES
+(1, 'CHICA', 2),
+(2, 'GRANDE', 4);
 
 -- --------------------------------------------------------
 
@@ -101,9 +147,9 @@ CREATE TABLE `mesas` (
 --
 
 CREATE TABLE `movimientos` (
-  `numero_movimiento` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `fecha` datetime NOT NULL,
-  `dni_empleado` int(11) NOT NULL,
+  `id_empleado` int(11) NOT NULL,
   `accion` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -114,15 +160,18 @@ CREATE TABLE `movimientos` (
 --
 
 CREATE TABLE `pedidos` (
-  `numero_pedido` int(11) NOT NULL,
-  `numero_comanda` int(11) NOT NULL,
-  `tipo` varchar(10) NOT NULL,
-  `nombre` varchar(30) NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `id_comanda` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
   `cantidad_unidades` int(11) NOT NULL,
   `precio_unidades` decimal(10,0) NOT NULL,
-  `fecha_registro` datetime NOT NULL,
-  `fecha_terminado` datetime NOT NULL,
+  `duracion_estimada` int(11) NOT NULL,
+  `fecha_inicio_elaboracion` datetime DEFAULT NULL,
+  `fecha_fin_elaboracion` datetime DEFAULT NULL,
+  `duracion_real` int(11) DEFAULT NULL,
   `estado` varchar(40) NOT NULL,
+  `fecha_alta` datetime NOT NULL,
+  `fecha_modificado` datetime DEFAULT NULL,
   `baja` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -133,13 +182,150 @@ CREATE TABLE `pedidos` (
 --
 
 CREATE TABLE `productos` (
-  `numero_producto` int(11) NOT NULL,
-  `tipo` varchar(20) NOT NULL,
-  `nombre` varchar(30) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_tipo_producto` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `duracion_estimada` int(11) NOT NULL,
   `stock` int(11) NOT NULL,
   `precio_unidades` decimal(10,0) NOT NULL,
+  `fecha_alta` datetime NOT NULL,
+  `fecha_modificado` datetime DEFAULT NULL,
   `baja` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `producto_tipos`
+--
+
+CREATE TABLE `producto_tipos` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `producto_tipos`
+--
+
+INSERT INTO `producto_tipos` (`id`, `nombre`) VALUES
+(1, 'BEBIDA'),
+(2, 'BEBIDA-ALCOHOL'),
+(3, 'COMIDA');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rol_tipos`
+--
+
+CREATE TABLE `rol_tipos` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `rol_tipos`
+--
+
+INSERT INTO `rol_tipos` (`id`, `nombre`) VALUES
+(1, 'CERVEZERO'),
+(2, 'BARTENDER'),
+(3, 'COCINERO'),
+(4, 'MOZO'),
+(5, 'SOCIO');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `comandas`
+--
+ALTER TABLE `comandas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `empleados`
+--
+ALTER TABLE `empleados`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `encuestas`
+--
+ALTER TABLE `encuestas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `mesas`
+--
+ALTER TABLE `mesas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `mesa_tipos`
+--
+ALTER TABLE `mesa_tipos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `movimientos`
+--
+ALTER TABLE `movimientos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `productos`
+--
+ALTER TABLE `productos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `producto_tipos`
+--
+ALTER TABLE `producto_tipos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `rol_tipos`
+--
+ALTER TABLE `rol_tipos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `mesa_tipos`
+--
+ALTER TABLE `mesa_tipos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `producto_tipos`
+--
+ALTER TABLE `producto_tipos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `rol_tipos`
+--
+ALTER TABLE `rol_tipos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

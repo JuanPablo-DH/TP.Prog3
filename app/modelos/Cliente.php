@@ -8,38 +8,34 @@ Juan Pablo Dongo Huaman, Div. 3°C
 
 */
 
-require_once "modelos/Input.php";
-require_once "modelos/Movimiento.php";
 require_once "bd/AccesoDatos.php";
+require_once "utils/Input.php";
+require_once "utils/Movimiento.php";
 
 class Cliente
 {
-    public $numero_cliente; // Alfanumerico Unico de 6 digitos
-    public $nombre; // Hasta 30 caracteres
-    public $baja; // true | false
-
+    public $id;
+    public $nombre;
+    public $fecha_alta;
+    public $fecha_modificado;
+    public $baja;
 
     private const DB_TABLA = "clientes";
 
 
-    private const NUMERO_CLIENTE_MSJ_ERROR = ["input_error_cliente"=>"Numero de cliente no valido - Debe ser un alfanumerico de 6 cifras"];
-    private const NOMBRE_MSJ_ERROR = ["input_error_cliente"=>"Nombre de cliente no valido - Debe ser solo letras, puede haber espacios y tener menos de 30 caracteres"];
-    private const BAJA_MSJ_ERROR = ["input_error_cliente"=>"Estado baja de cliente no valido - Debe ser '1' para [true] o '0' para [false]"];
 
-
-    
 
     // #region Validadores
-    public static function validar_numero_cliente($p_numero_cliente)
+    public static function validar_id($p_id)
     {
-        $p_numero_cliente = Input::es_alfanumerico($p_numero_cliente, 6, 6);
+        $p_id = Input::es_alfanumerico($p_id, 6, 6);
 
-        if($p_numero_cliente === null)
+        if($p_id === null)
         {
-            throw new Exception(json_encode(self::NUMERO_CLIENTE_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_cliente"=>"Id no valido - Debe ser un alfanumerico de 6 cifras"]));
         }
 
-        return $p_numero_cliente;
+        return $p_id;
     }
     public static function validar_nombre($p_nombre)
     {
@@ -47,21 +43,10 @@ class Cliente
 
         if($p_nombre === null)
         {
-            throw new Exception(json_encode(self::NOMBRE_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_cliente"=>"Nombre no valido - Debe ser solo letras, puede haber espacios y tener menos de 30 caracteres"]));
         }
         
         return $p_nombre;
-    }
-    public static function validar_baja($p_baja)
-    {
-        $p_baja = Input::convertir_a_booleano($p_baja);
-
-        if($p_baja === null)
-        {
-            throw new Exception(json_encode(self::BAJA_MSJ_ERROR));
-        }
-
-        return $p_baja;
     }
     // #endregion Validadores
 
@@ -69,15 +54,15 @@ class Cliente
     
 
     // #region Setters
-    public function set_numero_cliente($p_numero_cliente, $p_validar)
+    public function set_id($p_id, $p_validar)
     {
         if($p_validar)
         {
-            $this->numero_cliente = self::validar_numero_cliente($p_numero_cliente);
+            $this->id = self::validar_id($p_id);
         }
         else
         {
-            $this->numero_cliente = Input::limpiar($p_numero_cliente);
+            $this->id = intval(Input::limpiar($p_id));
         }
     }
     public function set_nombre($p_nombre, $p_validar)
@@ -91,16 +76,13 @@ class Cliente
             $this->nombre = strtolower(Input::limpiar($p_nombre));
         }
     }
-    public function set_baja($p_baja, $p_validar)
+    private function set_fecha_alta()
     {
-        if($p_validar)
-        {
-            $this->baja = self::validar_baja($p_baja);
-        }
-        else
-        {
-            $this->baja = boolval(Input::limpiar($p_baja));
-        }
+        $this->fecha_alta = new DateTime("now");
+    }
+    private function set_fecha_modificado()
+    {
+        $this->fecha_modificado = new DateTime("now");
     }
     // #endregion Setters
 
@@ -108,150 +90,99 @@ class Cliente
 
 
     // #region Utilidades
-    public static function add($p_cliente)
+    public static function add($p_cliente, $p_crear_id)
     {
-        $p_cliente->numero_cliente = self::crear_id();
+        if($p_crear_id)
+        {
+            $p_cliente->id = self::crear_id();
+        }
 
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
         $consulta = $accesoDatos->GetConsulta("INSERT INTO $db_tabla
-                                                           (numero_cliente,
+                                                           (id,
                                                             nombre,
+                                                            fecha_alta,
                                                             baja)
                                                     VALUES
-                                                           (:numero_cliente,
+                                                           (:id,
                                                             :nombre,
+                                                            :fecha_alta,
                                                             '0')");
-        $consulta->bindParam(':numero_cliente', $p_cliente->numero_cliente);
+        $consulta->bindParam(':id', $p_cliente->id);
         $consulta->bindParam(':nombre', $p_cliente->nombre);
+        $p_cliente->set_fecha_alta();
+        $fecha_alta_formato = $p_cliente->fecha_alta->format('Y-m-d H:i:s');
+        $consulta->bindParam(':fecha_alta', $fecha_alta_formato);
         $consulta->execute();
 
-        return self::existe_numerico_por_igualdad("numero_cliente", $p_cliente->numero_cliente);
-    }
-    public static function get($p_numero_cliente)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("      SELECT *
-                                                       FROM $db_tabla
-                                               WHERE BINARY :numero_cliente = numero_cliente");
-        $consulta->bindParam(":numero_cliente", $p_numero_cliente);
-        $consulta->execute();
-
-        if($consulta->rowCount() === 1)
-        {
-            return $consulta->fetchObject("Cliente");
-        }
-
-        return null;
+        return (self::get($p_cliente->id) !== null);
     }
     public static function set($p_cliente)
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("INSERT INTO $db_tabla
-                                                           (numero_cliente,
-                                                            nombre,
-                                                            baja)
-                                                    VALUES
-                                                           (:numero_cliente,
-                                                            :nombre,
-                                                            :baja)");
-        $consulta->bindParam(':numero_cliente', $p_cliente->numero_cliente);
+        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
+                                                  SET nombre = :nombre,
+                                                      fecha_modificado = :fecha_modificado,
+                                                      baja = :baja
+                                                WHERE id = :id");
+        $consulta->bindParam(':id', $p_cliente->id);
         $consulta->bindParam(':nombre', $p_cliente->nombre);
+        $p_cliente->set_fecha_modificado();
+        $fecha_modificado_formato = $p_cliente->fecha_modificado->format('Y-m-d H:i:s');
+        $consulta->bindParam(':fecha_modificado', $fecha_modificado_formato);
         $consulta->bindParam(':baja', $p_cliente->baja);
         return $consulta->execute();
     }
-    public static function get_alta($p_numero_cliente)
+    public static function del($p_cliente)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("DELETE FROM $db_tabla
+                                                     WHERE id = :id");
+        $consulta->bindParam(':id', $p_cliente->id);
+        return $consulta->rowCount();
+    }
+    public static function del_log($p_cliente)
+    {
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
+                                                  SET baja = '1'
+                                                WHERE id = :id");
+        $consulta->bindParam(':id', $p_cliente->id);
+        return $consulta->execute();
+    }
+    public static function get($p_id)
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
         $consulta = $accesoDatos->GetConsulta("      SELECT *
                                                        FROM $db_tabla
-                                               WHERE BINARY :numero_cliente = numero_cliente
-                                                        AND baja = '0'");
-        $consulta->bindParam(":numero_cliente", $p_numero_cliente);
+                                               WHERE BINARY :id = id");
+        $consulta->bindParam(":id", $p_id);
         $consulta->execute();
 
-        if($consulta->rowCount() === 1)
+        $cliente = $consulta->fetchObject("Cliente");
+        if($cliente !== false)
         {
-            return $consulta->fetchObject("Cliente");
+            return $cliente;
         }
 
         return null;
     }
-
-    private static function existe_cadena_por_igualdad($p_atributo, $p_valor)
+    public static function get_alta($p_numero_cliente)
     {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("      SELECT numero_cliente
-                                                       FROM $db_tabla
-                                               WHERE BINARY $p_atributo = :$p_atributo");
-        $consulta->bindParam(":$p_atributo" , $p_valor);
-        $consulta->execute();
+        $cliente = self::get($p_numero_cliente);
 
-        if($consulta->rowCount() > 0)
+        if($cliente->baja === 0)
         {
-            return true;
+            return $cliente;
         }
 
-        return false;
+        return null;
     }
-    private static function existe_numerico_por_igualdad($p_atributo, $p_valor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_cliente
-                                                 FROM $db_tabla
-                                                WHERE $p_atributo=:$p_atributo");
-        $consulta->bindParam(":$p_atributo" , $p_valor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-    private static function existe_alta_cadena_por_igualdad($p_atributo, $p_valor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("      SELECT numero_cliente
-                                                       FROM $db_tabla
-                                               WHERE BINARY $p_atributo = :$p_atributo
-                                                        AND baja = '0'");
-        $consulta->bindParam(":$p_atributo" , $p_valor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-    private static function existe_alta_numerico_por_igualdad($p_atributo, $p_valor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_cliente
-                                                 FROM $db_tabla
-                                                WHERE $p_atributo=:$p_atributo
-                                                  AND baja = '0'");
-        $consulta->bindParam(":$p_atributo" , $p_valor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     private static function crear_alfanumerico_aleatorio($p_longitud)
     {
         $caracteres = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -275,8 +206,8 @@ class Cliente
         while(true)
         {
             $alfanumerico = self::crear_alfanumerico_aleatorio(6);
-
-            if(self::existe_cadena_por_igualdad("numero_cliente", $alfanumerico) === false)
+            $cliente = self::get($alfanumerico);
+            if($cliente === null)
             {
                 return $alfanumerico;
             }
@@ -290,111 +221,77 @@ class Cliente
     // #region Funcionalidades
     public function alta($p_dni_empleado)
     {
-        $this->numero_cliente = self::crear_id();
-
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("INSERT INTO $db_tabla
-                                                           (numero_cliente,
-                                                            nombre,
-                                                            baja)
-                                                    VALUES
-                                                           (:numero_cliente,
-                                                            :nombre,
-                                                            '0')");
-        $consulta->bindParam(':numero_cliente', $this->numero_cliente);
-        $consulta->bindParam(':nombre', $this->nombre);
-        $consulta->execute();
-
-        if(self::existe_numerico_por_igualdad("numero_cliente", $this->numero_cliente) === false)
+        if(self::add($this, true) === false)
         {
             return ["alta_cliente_error"=>"No se pudo hacer"];
         }
 
-        Movimiento::add($p_dni_empleado, "Realizo el alta del cliente '$this->numero_cliente'");
+        Movimiento::add($p_dni_empleado, "Realizo el alta del cliente '$this->id'");
         return ["alta_cliente"=>"Realizado"];
     }
     public function baja($p_dni_empleado)
     {
-        if(self::existe_cadena_por_igualdad("numero_cliente", $this->numero_cliente) === false)
+        $cliente = self::get($this->id);
+        if($cliente === null)
         {
-            return ["baja_cliente_error"=>"No se pudo hacer porque no existe el numero de cliente '$this->numero_cliente'"];
+            return ["error_baja_cliente"=>"No existe el cliente '$this->id'"];
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("DELETE FROM $db_tabla
-                                                     WHERE numero_cliente = :numero_cliente");
-        $consulta->bindParam(":numero_cliente", $this->numero_cliente);
-        $consulta->execute();
-
-        $registros_afectados = $consulta->rowCount();
+        $registros_afectados = self::del($this);
         switch($registros_afectados)
         {
             case 1:
-                Movimiento::add($p_dni_empleado, "Realizo la baja del cliente '$this->numero_cliente'");
+                Movimiento::add($p_dni_empleado, "Realizo la baja del cliente '$this->id'");
                 return ["baja_cliente"=>"Realizado"];
             break;
 
             case 0:
-                return ["baja_cliente_error"=>"No se pudo hacer"];
+                return ["error_baja_cliente"=>"No se pudo hacer"];
             break;
 
             default:
-                return ["baja_cliente_error"=>"Se realizo, pero se eliminaron '$registros_afectados' registros"];
+                return ["error_baja_cliente"=>"Se realizo, pero se eliminaron '$registros_afectados' registros"];
             break;
         }
     }
     public function baja_logica($p_dni_empleado)
     {
-        if(self::existe_cadena_por_igualdad("numero_cliente", $this->numero_cliente) === false)
+        $cliente = self::get($this->id);
+        if($cliente === null)
         {
-            return ["baja_logica_cliente_error"=>"No se pudo hacer porque no existe el numero de cliente '$this->numero_cliente'"];
+            return ["error_baja_logica_cliente"=>"No existe el cliente '$this->id'"];
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
-                                                  SET baja = '1'
-                                                WHERE numero_cliente = :numero_cliente");
-        $consulta->bindParam(":numero_cliente", $this->numero_cliente);
-        if($consulta->execute() === false)
+        if(self::del_log($this) === false)
         {
-            return ["baja_logica_cliente"=>"No se pudo hacer"];
+            return ["error_baja_logica_cliente"=>"No se pudo hacer"];
         }
         
-        Movimiento::add($p_dni_empleado, "Realizo la baja logica del cliente '$this->numero_cliente'");
+        Movimiento::add($p_dni_empleado, "Realizo la baja logica del cliente '$this->id'");
         return ["baja_logica_cliente"=>"Realizado"];
     }
     public function modificar($p_dni_empleado)
     {
-        if(self::existe_cadena_por_igualdad("numero_cliente", $this->numero_cliente) === false)
+        $cliente = self::get($this->id);
+        if($cliente === null)
         {
-            return ["modificar_cliente_error"=>"No se pudo hacer porque no existe el numero de cliente '$this->numero_cliente'"];
+            return ["error_modificar_cliente"=>"No existe el cliente '$this->id'"];
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
-                                                  SET nombre = :nombre,
-                                                      baja = :baja
-                                                WHERE numero_cliente = :numero_cliente");
-        $consulta->bindParam(":numero_cliente", $this->numero_cliente);
-        $consulta->bindParam(":nombre", $this->nombre);
-        $consulta->bindParam(":baja", $this->baja);
-        if($consulta->execute() === false)
+        if(self::set($this) === false)
         {
-            return ["modificar_cliente"=>"No se pudo hacer"];
+            return ["error_modificar_cliente"=>"No se pudo hacer"];
         }
         
-        Movimiento::add($p_dni_empleado, "Realizo la modificacion del cliente '$this->numero_cliente'");
-        return ["modificar_cliente"=>"Realizado"];
+        Movimiento::add($p_dni_empleado, "Realizo la modificacion del cliente '$this->id'");
+        return ["modificar_cliente"=>"Realizado", "cliente_antes"=>$cliente, "cliente_despues"=>$this];
     }
     public function traer_todos()
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT * FROM $db_tabla");
+        $consulta = $accesoDatos->GetConsulta("SELECT *
+                                                 FROM $db_tabla");
         $consulta->execute();
         
         return ["lista_clientes"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Cliente")];
@@ -412,9 +309,10 @@ class Cliente
     }
     public function traer_uno()
     {
-        if(self::existe_cadena_por_igualdad("numero_cliente", $this->numero_cliente) === false)
+        $cliente = self::get($this->id);
+        if($cliente === null)
         {
-            return ["traer_un_cliente_error"=>"No se pudo hacer porque no existe el numero de cliente '$this->numero_cliente'"];
+            return ["error_modificar_cliente"=>"No existe cliente '$this->id'"];
         }
 
         $accesoDatos = AccesoDatos::GetPdo();
@@ -422,7 +320,7 @@ class Cliente
         $consulta = $accesoDatos->GetConsulta("SELECT *
                                                  FROM $db_tabla
                                                 WHERE BINARY numero_cliente = :numero_cliente");
-        $consulta->bindParam(":numero_cliente", $this->numero_cliente);
+        $consulta->bindParam(":id", $this->id);
         $consulta->execute();
 
         return ["cliente"=>$consulta->fetchObject("Cliente")];

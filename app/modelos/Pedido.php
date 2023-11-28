@@ -8,93 +8,93 @@ Juan Pablo Dongo Huaman, Div. 3°C
 
 */
 
-require_once "modelos/Input.php";
-require_once "modelos/Movimiento.php";
 require_once "bd/AccesoDatos.php";
+require_once "utils/Input.php";
+require_once "utils/TipoProducto.php";
+require_once "utils/Movimiento.php";
 
 class Pedido
 {
-    public $numero_pedido; // Numerico mayor a 1000
-    public $numero_comanda; // Numerico positivo
-    public $tipo; // Bebida Con/Sin Alcohool | Comida
-    public $nombre; // Nombre de la comida | bebida
-    public $cantidad_unidades; // Cantidad de la comida | bebida
-    public $precio_unidades; // Precio de la comida | bebida
-    public $fecha_registro; //Sale de la Comanda
-    public $fecha_terminado; //Lo determina el Socio agregando los minutos
-    public $estado; //(Inicial)-"Pendiente" (Intermedio 1)-"En Preparacion" (Intermedio 2)-"Listo Para Servir" (Final)-"Servido" (Excepcion)-"Cancelado" 
+    public $id;
+    public $id_comanda;
+    public $id_producto;
+    public $tipo_producto;
+    public $nombre_producto;
+    public $cantidad_unidades;
+    public $precio_unidades;
+    public $duracion_estimada;
+    public $fecha_inicio_elaboracion;
+    public $fecha_fin_elaboracion;
+    public $duracion_real;
+    public $estado; 
+    public $fecha_alta;
+    public $fecha_modificado;
     public $baja;
 
-    
     private const DB_TABLA = "pedidos";
 
 
-    private const NUMERO_PEDIDO_MSJ_ERROR = ["input_error_pedido"=>"Numero de pedido no valido - Debe ser mayor a 1000 (mil)."];
-    private const NUMERO_COMANDA_MSJ_ERROR = ["input_error_pedido"=>"Numero de comanda del pedido no valido - Debe ser mayor a cero."];
-    private const TIPO_MSJ_ERROR = ["input_error_pedido"=>"Tipo de pedido no valido - Debe estar 'bebida' o 'comida'."];
-    private const NOMBRE_MSJ_ERROR = ["input_error_pedido"=>"Nombre de pedido no valido - Debe ser solo letras y/o con signo '-' (guion), y puede tener hasta 30 caracteres como maximo"];
-    private const CANTIDAD_UNIDADES_MSJ_ERROR = ["input_error_pedido"=>"Cantidad de unidades del pedido no valido -  Debe ser mayor a cero"];
-    private const PRECIO_UNIDADES_MSJ_ERROR = ["input_error_pedido"=>"Precio de unidades del pedido no valido - Debe ser mayor a cero"];
-    private const FECHA_TERMINADO_MSJ_ERROR = ["input_error_pedido"=>"Fecha de terminado del pedido no valido - Los minutos que tarde el pedido en realizarse deben estar entre 1min y 90min inclusive."];
-    private const BAJA_MSJ_ERROR = ["input_error_pedido"=>"Estado baja de pedido no valido - Debe ser '1' para [true] o '0' para [false]"];
 
 
-
-    
     // #region Validadores
-    public static function validar_numero_pedido($p_numero_pedido)
+    public static function validar_id($pd_id)
     {
-        $p_numero_pedido = Input::numerico_es_mayor_igual($p_numero_pedido, 1000);
-
-        if($p_numero_pedido === null)
+        $pd_id = Input::numerico_es_mayor_igual($pd_id, 1000);
+        if($pd_id === null)
         {
-            throw new Exception(json_encode(self::NUMERO_PEDIDO_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_pedido"=>"Id no valido - Debe ser mayor igual a 1.000 (mil)."]));
         }
 
-        return (int)$p_numero_pedido;
+        return (int)$pd_id;
     }
-    public static function validar_numero_comanda($p_numero_comanda)
+    public static function validar_id_comanda($p_id_comanda)
     {
-        $p_numero_comanda = Input::numerico_es_mayor_igual($p_numero_comanda, 1);
-
-        if($p_numero_comanda === null)
+        $p_id_comanda = Input::numerico_es_mayor_igual($p_id_comanda, 1);
+        if($p_id_comanda === null)
         {
-            throw new Exception(json_encode(self::NUMERO_COMANDA_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_pedido"=>"Id de comanda no valido - Debe ser mayor a cero."]));
         }
 
-        return (int)$p_numero_comanda;
+        return (int)$p_id_comanda;
     }
-    public static function validar_tipo($p_tipo)
+    public static function validar_id_producto($p_id_producto)
     {
-        $p_tipo = Input::limpiar($p_tipo);
-        $p_tipo = strtolower($p_tipo);
-
-        if(strcmp($p_tipo, "bebida") != 0 &&
-           strcmp($p_tipo, "comida") != 0)
+        $p_id_producto = Input::numerico_es_mayor_igual($p_id_producto, 100);
+        if($p_id_producto === null)
         {
-            throw new Exception(json_encode(self::TIPO_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_pedido"=>"Id de producto no valido - Debe ser mayor o igual a 100 (cien)."]));
         }
 
-        return $p_tipo;
+        return (int)$p_id_producto;
     }
-    public static function validar_nombre($p_nombre)
+    public static function validar_tipo_producto($p_tipo_producto)
     {
-        $p_nombre = Input::es_alias_con_guiones($p_nombre, 1, 30);
+        $p_tipo_producto = strtoupper(Input::limpiar($p_tipo_producto));
 
-        if($p_nombre === null)
+        $tipo_producto = TipoProducto::get_por_nombre($p_tipo_producto);
+        if($tipo_producto === null)
         {
-            throw new Exception(json_encode(self::NOMBRE_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_pedido"=>"Tipo de producto no valido - No existe el tipo de producto '$p_tipo_producto'"]));
         }
 
-        return $p_nombre;
+        return $tipo_producto->nombre;
+    }
+    public static function validar_nombre_producto($p_nombre_producto)
+    {
+        $p_nombre_producto = Input::es_alias_con_guiones($p_nombre_producto, 1, 30);
+        if($p_nombre_producto === null)
+        {
+            throw new Exception(json_encode(["error_input_pedido"=>"Nombre de producto no valido - Debe ser solo letras y/o con signo '-' (guion), y puede tener hasta 30 caracteres como maximo"]));
+        }
+
+        return $p_nombre_producto;
     }
     public static function validar_cantidad_unidades($p_cantidad_unidades)
     {
         $p_cantidad_unidades = Input::numerico_es_mayor_igual($p_cantidad_unidades, 1);
-
         if($p_cantidad_unidades === null)
         {
-            throw new Exception(json_encode(self::CANTIDAD_UNIDADES_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_pedido"=>"Cantidad de unidades no valida - Debe ser positivo"]));
         }
 
         return (int)$p_cantidad_unidades;
@@ -105,47 +105,10 @@ class Pedido
 
         if($p_precio_unidades === null)
         {
-            throw new Exception(json_encode(self::PRECIO_UNIDADES_MSJ_ERROR));
+            throw new Exception(json_encode(["error_input_pedido"=>"Precio de unidades no valido - Debe ser positivo"]));
         }
 
         return (float)$p_precio_unidades;
-    }
-    public static function validar_fecha_terminado($p_minutos)
-    {
-        $p_minutos = Input::numerico_esta_entre($p_minutos, 1, 90);
-
-        if($p_minutos === null)
-        {
-            throw new Exception(json_encode(self::FECHA_TERMINADO_MSJ_ERROR));
-        }
-
-        return (int)$p_minutos;
-    }
-    public static function validar_estado($p_estado)
-    {
-        $p_estado = Input::limpiar($p_estado);
-        $p_estado = strtolower($p_estado);
-
-        if(strcmp($p_estado, "pendiente") != 0 &&
-           strcmp($p_estado, "en preparacion") != 0 &&
-           strcmp($p_estado, "listo para servir") != 0 &&
-           strcmp($p_estado, "servido") != 0)
-        {
-            throw new Exception(json_encode(self::TIPO_MSJ_ERROR));
-        }
-
-        return $p_estado;
-    }
-    public static function validar_baja($p_baja)
-    {
-        $p_baja = Input::convertir_a_booleano($p_baja);
-
-        if($p_baja === null)
-        {
-            throw new Exception(json_encode(self::BAJA_MSJ_ERROR));
-        }
-
-        return $p_baja;
     }
     // #endregion Validadores
 
@@ -153,48 +116,48 @@ class Pedido
 
 
     // #region Setters
-    public function set_numero_pedido($p_numero_pedido, $p_validar)
+    public function set_id($p_numero_pedido, $p_validar)
     {
         if($p_validar)
         {
-            $this->numero_pedido = self::validar_numero_pedido($p_numero_pedido);
+            $this->id = self::validar_id($p_numero_pedido);
         }
         else
         {
-            $this->numero_pedido = intval(Input::limpiar($p_numero_pedido));
+            $this->id = intval(Input::limpiar($p_numero_pedido));
         }
     }
-    public function set_numero_comanda($p_numero_comanda, $p_validar)
+    public function set_id_comanda($p_numero_comanda, $p_validar)
     {
         if($p_validar)
         {
-            $this->numero_comanda = self::validar_numero_comanda($p_numero_comanda);
+            $this->id_comanda = self::validar_id_comanda($p_numero_comanda);
         }
         else
         {
-            $this->numero_comanda = intval(Input::limpiar($p_numero_comanda));
+            $this->id_comanda = intval(Input::limpiar($p_numero_comanda));
         }
     }
-    public function set_tipo($p_tipo, $p_validar)
+    public function set_id_producto($p_id_producto, $p_validar)
     {
         if($p_validar)
         {
-            $this->tipo = self::validar_tipo($p_tipo);
+            $this->id_comanda = self::validar_id_producto($p_id_producto);
         }
         else
         {
-            $this->tipo = strtolower(Input::limpiar($p_tipo));
+            $this->id_producto = intval(Input::limpiar($p_id_producto));
         }
     }
-    public function set_nombre($p_nombre, $p_validar)
+    public function set_tipo_producto($p_tipo_producto, $p_validar)
     {
         if($p_validar)
         {
-            $this->nombre = self::validar_nombre($p_nombre);
+            $this->tipo_producto = self::validar_tipo_producto($p_tipo_producto);
         }
         else
         {
-            $this->nombre = strtolower(Input::limpiar($p_nombre));
+            $this->tipo_producto = strtoupper(Input::limpiar($p_tipo_producto));
         }
     }
     public function set_cantidad_unidades($p_cantidad_unidades, $p_validar)
@@ -219,45 +182,29 @@ class Pedido
             $this->precio_unidades = floatval(Input::limpiar($p_precio_unidades));
         }
     }
-    public function set_fecha_registro()
+    private function set_fecha_inicio_elaboracion()
     {
-        $this->fecha_registro = new DateTime("now");
+        $this->fecha_inicio_elaboracion = new DateTime("now");
     }
-    public function set_fecha_terminado($p_minutos, $p_validar)
+    private function set_fecha_fin_elaboracion()
     {
-        if($p_validar)
+        $this->fecha_fin_elaboracion = new DateTime("now");
+
+        if(!($this->fecha_inicio_elaboracion instanceof DateTime))
         {
-            $p_minutos = self::validar_fecha_terminado($p_minutos);
-        }
-        else
-        {
-            $p_minutos = intval(Input::limpiar($p_minutos));
+            $this->fecha_inicio_elaboracion = DateTime::createFromFormat("Y-m-d H:i:s", $this->fecha_inicio_elaboracion);
+            
         }
 
-        $this->fecha_terminado = new DateTime("now");
-        $this->fecha_terminado->add(new DateInterval("PT" . $p_minutos . "M"));
+        $this->duracion_real = $this->fecha_inicio_elaboracion->diff($this->fecha_fin_elaboracion)->i;
     }
-    public function set_estado($p_estado, $p_validar)
+    private function set_fecha_alta()
     {
-        if($p_validar)
-        {
-            $this->estado = self::validar_estado($p_estado);
-        }
-        else
-        {
-            $this->estado = strtolower(Input::limpiar($p_estado));
-        }
+        $this->fecha_alta = new DateTime("now");
     }
-    public function set_baja($p_baja, $p_validar)
+    private function set_fecha_modificado()
     {
-        if($p_validar)
-        {
-            $this->baja = self::validar_baja($p_baja);
-        }
-        else
-        {
-            $this->baja = boolval(Input::limpiar($p_baja));
-        }
+        $this->fecha_modificado = new DateTime("now");
     }
     // #endregion Setters
 
@@ -265,194 +212,220 @@ class Pedido
 
 
     // #region Utilidades
-    public static function add($p_pedido)
+    public static function add($p_pedido, $p_crear_id, $p_asignar_fecha_alta)
     {
-        $p_pedido->numero_pedido = self::crear_id();
-
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
         $consulta = $accesoDatos->GetConsulta("INSERT INTO $db_tabla
-                                                           (numero_pedido,
-                                                            numero_comanda,
-                                                            tipo,
-                                                            nombre,
-                                                            cantidad_unidades,
+                                                           (id,
+                                                            id_comanda,
+                                                            id_producto,
                                                             precio_unidades,
-                                                            fecha_registro,
-                                                            fecha_terminado,
+                                                            cantidad_unidades,
+                                                            duracion_estimada,
                                                             estado,
+                                                            fecha_alta,
                                                             baja)
                                                     VALUES
-                                                            (:numero_pedido,
-                                                             :numero_comanda,
-                                                             :tipo,
-                                                             :nombre,
-                                                             :cantidad_unidades,
-                                                             :precio_unidades,
-                                                             :fecha_registro,
-                                                             :fecha_terminado,
-                                                             :estado,
-                                                             '0')");
-        $consulta->bindParam(':numero_pedido', $p_pedido->numero_pedido);
-        $consulta->bindParam(':numero_comanda', $p_pedido->numero_comanda);
-        $consulta->bindParam(':tipo', $p_pedido->tipo);
-        $consulta->bindParam(':nombre', $p_pedido->nombre);
+                                                           (:id,
+                                                            :id_comanda,
+                                                            :id_producto,
+                                                            :precio_unidades,
+                                                            :cantidad_unidades,
+                                                            :duracion_estimada,
+                                                            :estado,
+                                                            :fecha_alta,
+                                                            '0')");
+        
+        if($p_crear_id)
+        {
+            $p_pedido->id = self::crear_id();
+        }
+        $consulta->bindParam(':id', $p_pedido->id);
+        $consulta->bindParam(':id_comanda', $p_pedido->id_comanda);
+        $consulta->bindParam(':id_producto', $p_pedido->id_producto);
         $consulta->bindParam(':cantidad_unidades', $p_pedido->cantidad_unidades);
-        $consulta->bindParam(':precio_unidades', $p_pedido->precio_unidades);
-        $fecha_registro_formato = $p_pedido->fecha_registro->format("Y-m-d H:i:s");
-        $fecha_terminado_formato = $p_pedido->fecha_terminado->format("Y-m-d H:i:s");;
-        $consulta->bindParam(':fecha_registro', $fecha_registro_formato);
-        $consulta->bindParam(':fecha_terminado', $fecha_terminado_formato);
+        $producto = Producto::get_alta($p_pedido->id_producto);
+        $consulta->bindParam(':precio_unidades', $producto->precio_unidades);
+        $consulta->bindParam(':duracion_estimada', $producto->duracion_estimada);
         $consulta->bindParam(':estado', $p_pedido->estado);
+        if($p_asignar_fecha_alta)
+        {
+            $p_pedido->set_fecha_alta();
+        }
+        $fecha_alta_formato = $p_pedido->fecha_alta->format("Y-m-d H:i:s");
+        $consulta->bindParam(':fecha_alta', $fecha_alta_formato);
         $consulta->execute();
 
-        return self::existe_numerico_por_igualdad("numero_pedido", $p_pedido->numero_pedido);
+        return (self::get($p_pedido->id) !== null);
     }
     public static function set($p_pedido)
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
         $consulta = $accesoDatos->GetConsulta("UPDATE $db_tabla
-                                                  SET
-                                                      numero_comanda = :numero_comanda,
-                                                      tipo = :tipo,
-                                                      nombre = :nombre,
-                                                      cantidad_unidades = :cantidad_unidades,
+                                                  SET id_comanda = :id_comanda,
+                                                      id_producto = :id_producto,
                                                       precio_unidades = :precio_unidades,
-                                                      fecha_registro = :fecha_registro,
-                                                      fecha_terminado = :fecha_terminado,
+                                                      cantidad_unidades = :cantidad_unidades,
+                                                      duracion_estimada = :duracion_estimada,
+                                                      fecha_inicio_elaboracion = :fecha_inicio_elaboracion,
+                                                      fecha_fin_elaboracion = :fecha_fin_elaboracion,
+                                                      duracion_real = :duracion_real,
                                                       estado = :estado,
+                                                      fecha_modificado = :fecha_modificado,
                                                       baja = :baja
-                                                WHERE 
-                                                      numero_pedido = :numero_pedido");
-        $consulta->bindParam(':numero_pedido', $p_pedido->numero_pedido);
-        $consulta->bindParam(':numero_comanda', $p_pedido->numero_comanda);
-        $consulta->bindParam(':tipo', $p_pedido->tipo);
-        $consulta->bindParam(':nombre', $p_pedido->nombre);
+                                                WHERE id = :id");
+        $consulta->bindParam(':id', $p_pedido->id);
+        $consulta->bindParam(':id_comanda', $p_pedido->id_comanda);
+        $consulta->bindParam(':id_producto', $p_pedido->id_producto);
         $consulta->bindParam(':cantidad_unidades', $p_pedido->cantidad_unidades);
-        $consulta->bindParam(':precio_unidades', $p_pedido->precio_unidades);
-
-        if($p_pedido->fecha_registro instanceof DateTime)
+        $producto = Producto::get_alta($p_pedido->id_producto);
+        $consulta->bindParam(':precio_unidades', $producto->precio_unidades);
+        $consulta->bindParam(':duracion_estimada', $producto->duracion_estimada);
+        if($p_pedido->fecha_inicio_elaboracion instanceof DateTime)
         {
-            $fecha_registro_formato = $p_pedido->fecha_registro->format('Y-m-d H:i:s');
+            $fecha_inicio_elaboracion_formato = $p_pedido->fecha_inicio_elaboracion->format("Y-m-d H:i:s");
+            $consulta->bindParam(':fecha_inicio_elaboracion', $fecha_inicio_elaboracion_formato);
         }
         else
         {
-            $fecha_registro_formato = $p_pedido->fecha_registro;
+            $consulta->bindParam(':fecha_inicio_elaboracion', $p_pedido->fecha_inicio_elaboracion);
         }
-        if($p_pedido->fecha_terminado instanceof DateTime)
+        if($p_pedido->fecha_fin_elaboracion instanceof DateTime)
         {
-            $fecha_terminado_formato = $p_pedido->fecha_terminado->format('Y-m-d H:i:s');
+            $fecha_fin_elaboracion_formato = $p_pedido->fecha_fin_elaboracion->format("Y-m-d H:i:s");
+            $consulta->bindParam(':fecha_fin_elaboracion', $fecha_fin_elaboracion_formato);
         }
         else
         {
-            $fecha_terminado_formato = $p_pedido->fecha_terminado;
+            $consulta->bindParam(':fecha_fin_elaboracion', $p_pedido->fecha_fin_elaboracion);
         }
-        
-        $consulta->bindParam(':fecha_registro', $fecha_registro_formato);
-        $consulta->bindParam(':fecha_terminado', $fecha_terminado_formato);
+        $consulta->bindParam(':duracion_real', $p_pedido->duracion_real);
         $consulta->bindParam(':estado', $p_pedido->estado);
+        $p_pedido->set_fecha_modificado();
+        $fecha_modificado_formato = $p_pedido->fecha_modificado->format("Y-m-d H:i:s");
+        $consulta->bindParam(':fecha_modificado', $fecha_modificado_formato);
         $consulta->bindParam(':baja', $p_pedido->baja);
         return $consulta->execute();
     }
-    public static function get_alta($p_numero_pedido)
+    public static function get($p_id)
     {
-        if(self::existe_numerico_por_igualdad("numero_pedido", $p_numero_pedido) === false)
+        $accesoDatos = AccesoDatos::GetPdo();
+        $db_tabla = self::DB_TABLA;
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      id_comanda,
+                                                      id_producto,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = (SELECT productos.id_tipo_producto FROM productos WHERE productos.id = pedidos.id_producto)) AS tipo_producto,
+                                                      (SELECT productos.nombre FROM productos WHERE productos.id = pedidos.id_producto) AS nombre_producto,
+                                                      cantidad_unidades,
+                                                      precio_unidades,
+                                                      duracion_estimada,
+                                                      fecha_inicio_elaboracion,
+                                                      fecha_fin_elaboracion,
+                                                      duracion_real,
+                                                      estado,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
+                                                 FROM $db_tabla
+                                                WHERE id = :id");
+        $consulta->bindParam(":id", $p_id);
+        $consulta->execute();
+
+        $pedido = $consulta->fetchObject("Pedido");
+        if($pedido !== false)
         {
-            return ["traer_un_pedido_error"=>"No se pudo hacer porque no existe el numero de pedido '$p_numero_pedido'"];
+            return $pedido;
         }
 
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                                 FROM $db_tabla
-                                                WHERE numero_pedido = :numero_pedido
-                                                      AND
-                                                      baja = '0'");
-        $consulta->bindParam(":numero_pedido", $p_numero_pedido);
-        $consulta->execute();
-        return $consulta->fetchObject("Pedido");
+        return null;
     }
-    public static function get_por_numero_comanda($p_numero_comanda)
+    public static function get_alta($p_id)
+    {
+        $pedido = self::get($p_id);
+
+        if($pedido !== null && $pedido->baja === 0)
+        {
+            return $pedido;
+        }
+
+        return null;
+    }
+    public static function get_por_id_comanda($p_id_comanda)
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      id_comanda,
+                                                      id_producto,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = (SELECT productos.id_tipo_producto FROM productos WHERE productos.id = pedidos.id_producto)) AS tipo_producto,
+                                                      (SELECT productos.nombre FROM productos WHERE productos.id = pedidos.id_producto) AS nombre_producto,
+                                                      cantidad_unidades,
+                                                      precio_unidades,
+                                                      duracion_estimada,
+                                                      fecha_inicio_elaboracion,
+                                                      fecha_fin_elaboracion,
+                                                      duracion_real,
+                                                      estado,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
                                                  FROM $db_tabla
-                                                WHERE numero_comanda = :numero_comanda");
-        $consulta->bindParam(":numero_comanda", $p_numero_comanda);
+                                                WHERE pedidos.id_comanda = :id_comanda");
+        $consulta->bindParam(":id_comanda", $p_id_comanda);
         $consulta->execute();
+
         return $consulta->fetchAll(PDO::FETCH_CLASS, "Pedido");
     }
-    public static function get_alta_por_numero_comanda($p_numero_comanda)
+    public static function get_alta_por_id_comanda($p_id_comanda)
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      id_comanda,
+                                                      id_producto,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = (SELECT productos.id_tipo_producto FROM productos WHERE productos.id = pedidos.id_producto)) AS tipo_producto,
+                                                      (SELECT productos.nombre FROM productos WHERE productos.id = pedidos.id_producto) AS nombre_producto,
+                                                      cantidad_unidades,
+                                                      precio_unidades,
+                                                      duracion_estimada,
+                                                      fecha_inicio_elaboracion,
+                                                      fecha_fin_elaboracion,
+                                                      duracion_real,
+                                                      estado,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
                                                  FROM $db_tabla
-                                                WHERE numero_comanda = :numero_comanda
+                                                WHERE pedidos.id_comanda = :id_comanda
                                                       AND
-                                                      baja='0'");
-        $consulta->bindParam(":numero_comanda", $p_numero_comanda);
+                                                      baja = '0'");
+        $consulta->bindParam(":id_comanda", $p_id_comanda);
         $consulta->execute();
+
         return $consulta->fetchAll(PDO::FETCH_CLASS, "Pedido");
     }
     public static function convertir_array_asociativo_a_pedido_sin_numero_comanda($p_array_asociativo)
     {
         $pedido = new Pedido();
-        $pedido->nombre = $p_array_asociativo["nombre"];
+        $pedido->nombre_producto = $p_array_asociativo["nombre_producto"];
         $pedido->cantidad_unidades = $p_array_asociativo["cantidad_unidades"];
         return $pedido;
-    }
-    private static function existe_numerico_por_igualdad($pAtributo, $pValor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_pedido
-                                               FROM $db_tabla
-                                               WHERE $pAtributo=:$pAtributo");
-        $consulta->bindParam(":$pAtributo" , $pValor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-    private static function existe_alta_numerico_por_igualdad($pAtributo, $pValor)
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_pedido
-                                               FROM $db_tabla
-                                               WHERE $pAtributo=:$pAtributo
-                                                     AND
-                                                     baja = '0'");
-        $consulta->bindParam(":$pAtributo" , $pValor);
-        $consulta->execute();
-
-        if($consulta->rowCount() > 0)
-        {
-            return true;
-        }
-
-        return false;
     }
     private static function crear_id()
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT numero_pedido
+        $consulta = $accesoDatos->GetConsulta("SELECT id
                                                FROM $db_tabla
-                                               ORDER BY numero_pedido DESC
+                                               ORDER BY id DESC
                                                LIMIT 1");
         $consulta->execute();
         $registro = $consulta->fetchObject("Pedido");
         if($registro != false)
         {
-            return ($registro->numero_pedido + 1);
+            return ($registro->id + 1);
         }
             
         return 1000;
@@ -465,58 +438,34 @@ class Pedido
     // #region Funcionalidades
     public function alta($p_dni_empleado)
     {
-        $this->numero_pedido = self::crear_id();
-
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("INSERT INTO $db_tabla
-                                                           (numero_pedido,
-                                                            numero_comanda,
-                                                            tipo,
-                                                            nombre,
-                                                            cantidad_unidades,
-                                                            precio_unidades,
-                                                            fecha_registro,
-                                                            fecha_terminado,
-                                                            estado,
-                                                            baja)
-                                                    VALUES
-                                                            (:numero_pedido,
-                                                             :numero_comanda,
-                                                             :tipo,
-                                                             :nombre,
-                                                             :cantidad_unidades,
-                                                             :precio_unidades,
-                                                             :fecha_registro,
-                                                             :fecha_terminado,
-                                                             :estado,
-                                                             '0')");
-        $consulta->bindParam(':numero_pedido', $this->numero_pedido);
-        $consulta->bindParam(':numero_comanda', $this->numero_comanda);
-        $consulta->bindParam(':tipo', $this->tipo);
-        $consulta->bindParam(':nombre', $this->nombre);
-        $consulta->bindParam(':cantidad_unidades', $this->cantidad_unidades);
-        $consulta->bindParam(':precio_unidades', $this->precio_unidades);
-        $fecha_registro_formato = $this->fecha_registro->format("Y-m-d H:i:s");
-        $fecha_terminado_formato = $this->fecha_registro->format("Y-m-d H:i:s");
-        $consulta->bindParam(':fecha_registro', $fecha_registro_formato);
-        $consulta->bindParam(':fecha_terminado', $fecha_terminado_formato);
-        $consulta->bindParam(':estado', $this->estado);
-        $consulta->execute();
-
-        if(self::existe_numerico_por_igualdad("numero_pedido", $this->numero_pedido) === false)
+        if(self::add($this, true, true) === false)
         {
-            ["alta_pedido_error"=>"No se pudo hacer"];
+            ["error_alta_pedido"=>"No se pudo hacer"];
         }
 
-        Movimiento::add($p_dni_empleado, "Realizo el alta del pedido '$this->numero_pedido'");
+        Movimiento::add($p_dni_empleado, "Realizo el alta del pedido '$this->id'");
         return ["alta_pedido"=>"Realizado"];
     }
     public function traer_todos()
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT * FROM $db_tabla");
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      id_comanda,
+                                                      id_producto,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = (SELECT productos.id_tipo_producto FROM productos WHERE productos.id = pedidos.id_producto)) AS tipo_producto,
+                                                      (SELECT productos.nombre FROM productos WHERE productos.id = pedidos.id_producto) AS nombre_producto,
+                                                      cantidad_unidades,
+                                                      precio_unidades,
+                                                      duracion_estimada,
+                                                      fecha_inicio_elaboracion,
+                                                      fecha_fin_elaboracion,
+                                                      duracion_real,
+                                                      estado,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
+                                                 FROM $db_tabla");
         $consulta->execute();
 
         return ["lista_pedidos"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Pedido")];
@@ -525,54 +474,53 @@ class Pedido
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      id_comanda,
+                                                      id_producto,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = (SELECT productos.id_tipo_producto FROM productos WHERE productos.id = pedidos.id_producto)) AS tipo_producto,
+                                                      (SELECT productos.nombre FROM productos WHERE productos.id = pedidos.id_producto) AS nombre_producto,
+                                                      cantidad_unidades,
+                                                      precio_unidades,
+                                                      duracion_estimada,
+                                                      fecha_inicio_elaboracion,
+                                                      fecha_fin_elaboracion,
+                                                      duracion_real,
+                                                      estado,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
                                                  FROM $db_tabla
-                                                WHERE baja = '0'");
+                                                 WHERE baja = '0'");
         $consulta->execute();
 
         return ["lista_pedidos"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Pedido")];
     }
-    public function traer_bebidas_sin_alcohol_alta_pendiente()
+    public function traer_pendientes_por_tipo_producto_alta()
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      id_comanda,
+                                                      id_producto,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = (SELECT productos.id_tipo_producto FROM productos WHERE productos.id = pedidos.id_producto)) AS tipo_producto,
+                                                      (SELECT productos.nombre FROM productos WHERE productos.id = pedidos.id_producto) AS nombre_producto,
+                                                      cantidad_unidades,
+                                                      precio_unidades,
+                                                      duracion_estimada,
+                                                      fecha_inicio_elaboracion,
+                                                      fecha_fin_elaboracion,
+                                                      duracion_real,
+                                                      estado,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
                                                  FROM $db_tabla
-                                                WHERE baja = '0'
-                                                      AND
-                                                      tipo = 'bebida'
-                                                      AND
-                                                      estado = 'pendiente'");
-        $consulta->execute();
-
-        return ["lista_pedidos"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Pedido")];
-    }
-    public function traer_bebidas_con_alcohol_alta_pendiente()
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                                 FROM $db_tabla
-                                                WHERE baja = '0'
-                                                      AND
-                                                      tipo = 'bebida-alcohol'
-                                                      AND
-                                                      estado = 'pendiente'");
-        $consulta->execute();
-
-        return ["lista_pedidos"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Pedido")];
-    }
-    public function traer_comidas_alta_pendiente()
-    {
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                                 FROM $db_tabla
-                                                WHERE baja = '0'
-                                                      AND
-                                                      tipo = 'comida'
-                                                      AND
-                                                      estado = 'pendiente'");
+                                                 WHERE baja = '0'
+                                                       AND
+                                                       (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = (SELECT productos.id_tipo_producto FROM productos WHERE productos.id = pedidos.id_producto)) = :tipo_producto
+                                                       AND
+                                                       (estado = 'PENDIENTE' OR estado = 'EN PREPARACION')");
+        $consulta->bindParam(":tipo_producto", $this->tipo_producto);                                     
         $consulta->execute();
 
         return ["lista_pedidos"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Pedido")];
@@ -581,203 +529,240 @@ class Pedido
     {
         $accesoDatos = AccesoDatos::GetPdo();
         $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
+        $consulta = $accesoDatos->GetConsulta("SELECT id,
+                                                      id_comanda,
+                                                      id_producto,
+                                                      (SELECT producto_tipos.nombre FROM producto_tipos WHERE producto_tipos.id = (SELECT productos.id_tipo_producto FROM productos WHERE productos.id = pedidos.id_producto)) AS tipo_producto,
+                                                      (SELECT productos.nombre FROM productos WHERE productos.id = pedidos.id_producto) AS nombre_producto,
+                                                      cantidad_unidades,
+                                                      precio_unidades,
+                                                      duracion_estimada,
+                                                      fecha_inicio_elaboracion,
+                                                      fecha_fin_elaboracion,
+                                                      duracion_real,
+                                                      estado,
+                                                      fecha_alta,
+                                                      fecha_modificado,
+                                                      baja
                                                  FROM $db_tabla
-                                                WHERE baja = '0'
-                                                      AND
-                                                      estado = 'listo para servir'");
+                                                 WHERE baja = '0'
+                                                       AND
+                                                       estado = 'LISTO PARA SERVIR'");
         $consulta->execute();
 
         return ["lista_pedidos"=>$consulta->fetchAll(PDO::FETCH_CLASS, "Pedido")];
     }
     public function traer_uno()
     {
-        if(self::existe_numerico_por_igualdad("numero_pedido", $this->numero_pedido) === false)
+        $pedido = self::get($this->id);
+        if($pedido === null)
         {
-            return ["traer_un_pedido_error"=>"No se pudo hacer porque no existe el numero de pedido '$this->numero_pedido'"];
+            return ["error_traer_un_pedido"=>"No existe el pedido '$this->id'"];
         }
-
-        $accesoDatos = AccesoDatos::GetPdo();
-        $db_tabla = self::DB_TABLA;
-        $consulta = $accesoDatos->GetConsulta("SELECT *
-                                                 FROM $db_tabla
-                                                WHERE numero_pedido = :numero_pedido");
-        $consulta->bindParam(":numero_pedido", $this->numero_pedido);
-        $consulta->execute();
         
-        return ["pedido"=>$consulta->fetchObject("Pedido")];
+        return ["pedido"=>$pedido];
     }
-    // #endregion Funcionalidades
-
-    public static function cervezero_elaborar($p_numero_pedido, $p_minutos_elaboracion)
+    public function cervezero_elaborar()
     {
-        if(self::existe_alta_numerico_por_igualdad("numero_pedido", $p_numero_pedido) === false)
+        $pedido = self::get_alta($this->id);
+        if($pedido === null)
         {
-            return ["cervezero_elaborar_error"=>"No existe el numero de pedido '$p_numero_pedido'"];
+            return ["error_cervezero_elaborar"=>"No existe el pedido '$this->id'"];
         }
 
-        $pedido = self::get_alta($p_numero_pedido);
-        if(strcmp($pedido->tipo, "bebida-alcohol") != 0)
+        if(strcmp($pedido->tipo_producto, "BEBIDA-ALCOHOL") != 0)
         {
-            return ["cervezero_elaborar_error"=>"El cevezero solo puede elaborar pedidos de tipo 'bebida-alcohol'"];
+            return ["error_cervezero_elaborar"=>"El cervezero solo puede elaborar pedidos de tipo 'BEBIDA-ALCOHOL'"];
         }
 
-        $pedido->set_fecha_terminado($p_minutos_elaboracion, false);
-        $pedido->estado = "en preparacion";
+        if(strcmp($pedido->estado, "PENDIENTE") != 0)
+        {
+             return ["error_cervezero_elaborar"=>"El cervezero solo puede elaborar pedidos que esten en el estado 'PENDIENTE'"];
+        }
+
+        $pedido->set_fecha_inicio_elaboracion();
+        $pedido->estado = "EN PREPARACION";
 
         if(self::set($pedido) === false)
         {
-            return ["cervezero_elaborar_error"=>"No se pudo hacer"];
+            return ["error_cervezero_elaborar"=>"No se pudo hacer"];
         }
 
         return ["cervezero_elaborar"=>"Realizado"];
     }
-    public static function bartender_elaborar($p_numero_pedido, $p_minutos_elaboracion)
+    public function bartender_elaborar()
     {
-        if(self::existe_alta_numerico_por_igualdad("numero_pedido", $p_numero_pedido) === false)
+        $pedido = self::get_alta($this->id);
+        if($pedido === null)
         {
-            return ["bartender_elaborar_error"=>"No existe el numero de pedido '$p_numero_pedido'"];
+            return ["error_bartender_elaborar"=>"No existe el pedido '$$this->id'"];
         }
 
-        $pedido = self::get_alta($p_numero_pedido);
-        if(strcmp($pedido->tipo, "bebida") != 0)
+        if(strcmp($pedido->tipo_producto, "BEBIDA") != 0)
         {
-            return ["bartender_elaborar_error"=>"El bartender solo puede elaborar pedidos de tipo 'bebida'"];
+            return ["error_bartender_elaborar"=>"El bartender solo puede elaborar pedidos de tipo 'BEBIDA'"];
         }
 
-        $pedido->set_fecha_terminado($p_minutos_elaboracion, false);
-        $pedido->estado = "en preparacion";
+        if(strcmp($pedido->estado, "PENDIENTE") != 0)
+        {
+             return ["error_bartender_elaborar"=>"El bartender solo puede elaborar pedidos que esten en el estado 'PENDIENTE'"];
+        }
+
+        $pedido->set_fecha_inicio_elaboracion();
+        $pedido->estado = "EN PREPARACION";
 
         if(self::set($pedido) === false)
         {
-            return ["bartender_elaborar_error"=>"No se pudo hacer"];
+            return ["error_bartender_elaborar"=>"No se pudo hacer"];
         }
 
         return ["bartender_elaborar"=>"Realizado"];
     }
-    public static function cocinero_elaborar($p_numero_pedido, $p_minutos_elaboracion)
+    public function cocinero_elaborar()
     {
-        if(self::existe_alta_numerico_por_igualdad("numero_pedido", $p_numero_pedido) === false)
+        $pedido = self::get_alta($this->id);
+        if($pedido === null)
         {
-            return ["cocinero_elaborar_error"=>"No existe el numero de pedido '$p_numero_pedido'"];
+            return ["error_cocinero_elaborar"=>"No existe el pedido '$$this->id'"];
         }
 
-        $pedido = self::get_alta($p_numero_pedido);
-        if(strcmp($pedido->tipo, "comida") != 0)
+        if(strcmp($pedido->tipo_producto, "COMIDA") != 0)
         {
-            return ["cocinero_elaborar_error"=>"El cocinero solo puede elaborar pedidos de tipo 'comida'"];
+            return ["error_cocinero_elaborar"=>"El cocinero solo puede elaborar pedidos de tipo 'COMIDA'"];
         }
 
-        $pedido->set_fecha_terminado($p_minutos_elaboracion, false);
-        $pedido->estado = "en preparacion";
+        if(strcmp($pedido->estado, "PENDIENTE") != 0)
+        {
+             return ["error_cocinero_elaborar"=>"El cocinero solo puede elaborar pedidos que esten en el estado 'PENDIENTE'"];
+        }
+
+        $pedido->set_fecha_inicio_elaboracion();
+        $pedido->estado = "EN PREPARACION";
 
         if(self::set($pedido) === false)
         {
-            return ["cocinero_elaborar_error"=>"No se pudo hacer"];
+            return ["error_cocinero_elaborar"=>"No se pudo hacer"];
         }
 
-        return ["cocineror_elabora"=>"Realizado"];
+        return ["cocinero_elaborar"=>"Realizado"];
     }
-    
-    public static function cervezero_terminar($p_numero_pedido)
+    public function cervezero_terminar()
     {
-        if(self::existe_alta_numerico_por_igualdad("numero_pedido", $p_numero_pedido) === false)
+        $pedido = self::get_alta($this->id);
+        if($pedido === null)
         {
-            return ["cervezero_terminar_error"=>"No existe el numero de pedido '$p_numero_pedido'"];
+            return ["error_cervezero_elaborar"=>"No existe el pedido '$this->id'"];
+        }
+        
+        if(strcmp($pedido->tipo_producto, "BEBIDA-ALCOHOL") != 0)
+        {
+            return ["error_cervezero_terminar"=>"El cervezero solo puede terminar pedidos de tipo 'BEBIDA-ALCOHOL'"];
         }
 
-        $pedido = self::get_alta($p_numero_pedido);
-        if(strcmp($pedido->tipo, "bebida-alcohol") != 0)
+        if(strcmp($pedido->estado, "EN PREPARACION") != 0)
         {
-            return ["cervezero_terminar_error"=>"El cevezero solo puede terminar pedidos de tipo 'bebida-alcohol'"];
+             return ["error_cervezero_terminar"=>"El cervezero solo puede terminar pedidos que esten en el estado 'EN PREPARACION'"];
         }
 
-        $pedido->estado = "listo para servir";
+        $pedido->set_fecha_fin_elaboracion();
+        $pedido->estado = "LISTO PARA SERVIR";
 
         if(self::set($pedido) === false)
         {
-            return ["cervezero_terminar_error"=>"No se pudo hacer"];
+            return ["error_cervezero_terminar"=>"No se pudo hacer"];
         }
 
         return ["cervezero_terminar"=>"Realizado"];
     }
-    public static function bartender_terminar($p_numero_pedido)
+    public function bartender_terminar()
     {
-        if(self::existe_alta_numerico_por_igualdad("numero_pedido", $p_numero_pedido) === false)
+        $pedido = self::get_alta($this->id);
+        if($pedido === null)
         {
-            return ["bartender_terminar_error"=>"No existe el numero de pedido '$p_numero_pedido'"];
+            return ["error_bartender_terminar"=>"No existe el pedido '$$this->id'"];
         }
 
-        $pedido = self::get_alta($p_numero_pedido);
-        if(strcmp($pedido->tipo, "bebida") != 0)
+        if(strcmp($pedido->tipo_producto, "BEBIDA") != 0)
         {
-            return ["bartender_terminar_error"=>"El bartender solo puede terminar pedidos de tipo 'bebida'"];
+            return ["error_bartender_terminar"=>"El bartender solo puede terminar pedidos de tipo 'BEBIDA'"];
         }
 
-        $pedido->estado = "listo para servir";
+        if(strcmp($pedido->estado, "EN PREPARACION") != 0)
+        {
+             return ["error_bartender_terminar"=>"El bartender solo puede terminar pedidos que esten en el estado 'EN PREPARACION'"];
+        }
+
+        $pedido->set_fecha_fin_elaboracion();
+        $pedido->estado = "LISTO PARA SERVIR";
 
         if(self::set($pedido) === false)
         {
-            return ["bartender_terminar_error"=>"No se pudo hacer"];
+            return ["error_bartender_terminar"=>"No se pudo hacer"];
         }
 
         return ["bartender_terminar"=>"Realizado"];
     }
-    public static function cocinero_terminar($p_numero_pedido)
+    public function cocinero_terminar()
     {
-        if(self::existe_alta_numerico_por_igualdad("numero_pedido", $p_numero_pedido) === false)
+        $pedido = self::get($this->id);
+        if($pedido === null)
         {
-            return ["cocinero_terminar_error"=>"No existe el numero de pedido '$p_numero_pedido'"];
+            return ["error_cocinero_terminar"=>"No existe el pedido '$$this->id'"];
         }
 
-        $pedido = self::get_alta($p_numero_pedido);
-        if(strcmp($pedido->tipo, "comida") != 0)
+        if(strcmp($pedido->tipo_producto, "COMIDA") != 0)
         {
-            return ["cocinero_terminar_error"=>"El cocinero solo puede terminar pedidos de tipo 'comida'"];
+            return ["error_cocinero_terminar"=>"El cocinero solo puede terminar pedidos de tipo 'COMIDA'"];
         }
 
-        $pedido->estado = "listo para servir";
+        if(strcmp($pedido->estado, "EN PREPARACION") != 0)
+        {
+             return ["error_cocinero_terminar"=>"El cocinero solo puede terminar pedidos que esten en el estado 'EN PREPARACION'"];
+        }
+
+        $pedido->set_fecha_fin_elaboracion();
+        $pedido->estado = "LISTO PARA SERVIR";
 
         if(self::set($pedido) === false)
         {
-            return ["cocinero_terminar_error"=>"No se pudo hacer"];
+            return ["error_cocinero_terminar"=>"No se pudo hacer"];
         }
 
         return ["cocinero_terminar"=>"Realizado"];
     }
-
-    public static function mozo_servir($p_numero_pedido)
+    public function mozo_servir()
     {
-        if(self::existe_alta_numerico_por_igualdad("numero_pedido", $p_numero_pedido) === false)
+        $pedido = self::get($this->id);
+        if($pedido === null)
         {
-            return ["mozo_servir_error"=>"No existe el numero de pedido '$p_numero_pedido'"];
+            return ["error_mozo_servir"=>"No existe el pedido '$$this->id'"];
         }
 
-        $pedido = self::get_alta($p_numero_pedido);
-        if(strcmp($pedido->estado, "listo para servir") != 0)
+        if(strcmp($pedido->estado, "LISTO PARA SERVIR") != 0)
         {
-            return ["mozo_servir_error"=>"El mozo solo puede servir pedidos que esten en el estado 'listo para servir'"];
+             return ["error_mozo_servir"=>"El mozo solo puede servir pedidos que esten en el estado 'LISTO PARA SERVIR'"];
         }
 
-        $pedido->estado = "servido";
+        $pedido->estado = "SERVIDO";
 
         if(self::set($pedido) === false)
         {
-            return ["mozo_servir_error"=>"No se pudo hacer"];
+            return ["error_mozo_servir"=>"No se pudo hacer"];
         }
 
-        $comanda = Comanda::get_alta($pedido->numero_comanda);
-        $comanda->lista_pedidos = Pedido::get_por_numero_comanda($comanda->numero_comanda);
-        $mesa = Mesa::get($comanda->numero_mesa);
-        
+        $comanda = Comanda::get_alta($pedido->id_comanda);
+        $comanda->lista_pedidos = Pedido::get_por_id_comanda($comanda->id);
+
         if($comanda->verificar_si_todos_los_pedidos_estan_servidos() === true)
         {
-            $mesa->estado = "con cliente comiendo";
+            $mesa = Mesa::get($comanda->id_mesa);
+            $mesa->estado = "CON CLIENTE COMIENDO";
             Mesa::set($mesa);
         }
 
         return ["mozo_servir"=>"Realizado"];
     }
+    // #endregion Funcionalidades
 }
     
 

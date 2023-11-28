@@ -1,5 +1,13 @@
 <?php
 
+/*
+
+Programacion III
+TP - La Comanda
+Juan Pablo Dongo Huaman, Div. 3°C
+
+*/
+
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
@@ -24,9 +32,10 @@ class ComandaMiddleware
         }
         catch(Exception $e)
         {
-            $response->getBody()->write($e->getMessage());
+            $payload = $e->getMessage();
+            $response->getBody()->write($payload);
         }
-
+        
         return $response->withHeader("Content-Type", "application/json");
     }
     public function validar_input_traer_uno(Request $request, RequestHandler $handler)
@@ -37,13 +46,14 @@ class ComandaMiddleware
 
         try
         {
-            Comanda::validar_numero_comanda($parametros["numero_comanda"]);
+            Comanda::validar_id($parametros["id"]);
 
             $response = $handler->handle($request);
         }
         catch(Exception $e)
         {
-            $response->getBody()->write($e->getMessage());
+            $payload = $e->getMessage();
+            $response->getBody()->write($payload);
         }
         
         return $response->withHeader("Content-Type", "application/json");

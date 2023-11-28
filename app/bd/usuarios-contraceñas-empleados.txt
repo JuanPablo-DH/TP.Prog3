@@ -1,0 +1,6 @@
+           mail               contraseña
+1   juanpablo@gmail.com    -     1234     (cervezero)
+2   kevin@gmail.com        -     4567     (bartender)
+3   santiago@gmail.com     -     78910    (cocinero)
+4   alan@gmail.com         -     3210     (mozo)
+5   adrian@gmail.com       -     6543     (socio)

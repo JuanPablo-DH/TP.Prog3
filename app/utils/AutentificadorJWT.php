@@ -1,5 +1,13 @@
 <?php
 
+/*
+
+Programacion III
+TP - La Comanda
+Juan Pablo Dongo Huaman, Div. 3°C
+
+*/
+
 use Firebase\JWT\JWT;
 
 class AutentificadorJWT
