@@ -10,7 +10,7 @@ Juan Pablo Dongo Huaman, Div. 3°C
 
 class Movimiento
 {
-    public $numero_movimiento;
+    public $id;
     public $fecha;
     public $dni_empleado;
     public $accion;
